@@ -160,13 +160,12 @@ export class App {
   protected songResults = signal<MappedSpotifyTrack[]>([]);
   protected movieResults = signal<Movie[]>([]);
 
-  onSearchChange(change: any) {
-    console.log('change', change);
-    this.applicationStateService.setSearchQuery(change);
+  onSearchChange(updatedValue: string) {
+    this.applicationStateService.setSearchQuery(updatedValue);
   }
 
   async searchSongs() {
-    if (!this.searchQuery()?.trim()) {
+    if (!this.searchQuery().trim()) {
       return;
     }
 

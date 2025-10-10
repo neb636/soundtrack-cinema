@@ -1,0 +1,42 @@
+.song-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.song-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.song-card__image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.song-card__info {
+  padding: 1rem;
+}
+
+.song-card__artists {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 0.25rem 0;
+}
+
+.song-card__album {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0;
+}
+
+.song-card__name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}

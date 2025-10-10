@@ -9,12 +9,12 @@ import { MappedSpotifyTrack } from '../../services/spotify-api/types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<div class="song-card">
     @if (song()?.albumImage) {
-      <img [src]="song()?.albumImage" [alt]="song()?.name" class="song-image" />
+      <img [src]="song()?.albumImage" [alt]="song()?.name" class="song-card__image" />
     }
-    <div class="song-info">
-      <h3 class="song-name">{{ song()?.name }}</h3>
-      <p class="song-artists">{{ song()?.artists?.join(', ') }}</p>
-      <p class="song-album">{{ song()?.album }}</p>
+    <div class="song-card__info">
+      <h3 class="song-card__name">{{ song()?.name }}</h3>
+      <p class="song-card__artists">{{ song()?.artists?.join(', ') }}</p>
+      <p class="song-card__album">{{ song()?.album }}</p>
     </div>
   </div>`,
 })
