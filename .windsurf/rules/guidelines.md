@@ -1,4 +1,18 @@
+---
+trigger: manual
+---
+
 You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
+
+## General
+
+- 'lodash-es' is avaliable for utility functions
+
+## Coding standards
+
+- Human readability and ease of understanding are top priorities
+- Avoid terse naming, well named variables/functions/methods can be just as informative or better than comments
+- For methods/functions with more than 3 params prefer a config object. `doSomething(config: { one: string; two: string; three: number; four: boolean })` over `doSomething(one: string, two: string, three: number, four: boolean)`
 
 ## TypeScript Best Practices
 
@@ -43,5 +57,5 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ## Services
 
 - Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
+- Use the `providedIn: 'root'` for all services
 - Use the `inject()` function instead of constructor injection
