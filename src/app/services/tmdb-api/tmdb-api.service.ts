@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export interface Movie {
   id: number;
@@ -45,7 +45,7 @@ export class TmdbService {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -82,7 +82,7 @@ export class TmdbService {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -112,10 +112,7 @@ export class TmdbService {
    * Search for movies by multiple keywords (song name + artist)
    * This provides better results by combining song and artist information
    */
-  async searchMoviesBySongAndArtist(
-    songName: string,
-    artistName: string
-  ): Promise<Movie[]> {
+  async searchMoviesBySongAndArtist(songName: string, artistName: string): Promise<Movie[]> {
     const query = `${songName} ${artistName}`;
     return this.searchMovies(query);
   }
@@ -131,7 +128,7 @@ export class TmdbService {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       );
 
       if (!response.ok) {

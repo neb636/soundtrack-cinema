@@ -1,36 +1,20 @@
 import { Injectable, signal } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
+import { MappedSpotifyTrack, SpotifySearchResponse } from './types';
+import { mapSearchResponseToTrack } from './mapper';
 
-export interface SpotifyTrack {
-  id: string;
-  name: string;
-  artists: string[];
-  album: string;
-  albumImage: string;
-  previewUrl: string | null;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class SpotifyService {
   private accessToken = signal<string | null>(null);
   private tokenExpiry = signal<number>(0);
 
-  constructor() {}
-
-  /**
-   * Get Spotify access token using Client Credentials flow
-   */
   private async getAccessToken(): Promise<string> {
     // Check if we have a valid token
     if (this.accessToken() && Date.now() < this.tokenExpiry()) {
       return this.accessToken()!;
     }
 
-    const credentials = btoa(
-      `${environment.spotify.clientId}:${environment.spotify.clientSecret}`
-    );
+    const credentials = btoa(`${environment.spotify.clientId}:${environment.spotify.clientSecret}`);
 
     try {
       const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -57,10 +41,7 @@ export class SpotifyService {
     }
   }
 
-  /**
-   * Search for tracks on Spotify
-   */
-  async searchTracks(query: string): Promise<SpotifyTrack[]> {
+  async searchTracks(query: string): Promise<MappedSpotifyTrack[]> {
     if (!query.trim()) {
       return [];
     }
@@ -74,33 +55,23 @@ export class SpotifyService {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) {
         throw new Error('Failed to search tracks');
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as SpotifySearchResponse;
 
-      return data.tracks.items.map((track: any) => ({
-        id: track.id,
-        name: track.name,
-        artists: track.artists.map((artist: any) => artist.name),
-        album: track.album.name,
-        albumImage: track.album.images[0]?.url || '',
-        previewUrl: track.preview_url,
-      }));
+      return data.tracks.items.map((track) => mapSearchResponseToTrack(track));
     } catch (error) {
       console.error('Error searching tracks:', error);
       throw error;
     }
   }
 
-  /**
-   * Get track details by ID
-   */
-  async getTrack(trackId: string): Promise<SpotifyTrack | null> {
+  async getTrack(trackId: string): Promise<MappedSpotifyTrack | null> {
     try {
       const token = await this.getAccessToken();
 

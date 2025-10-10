@@ -1,13 +1,17 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SpotifyService, SpotifyTrack } from './services/spotify.service';
-import { TmdbService, Movie } from './services/tmdb.service';
+import { SpotifyService } from './services/spotify-api/spotify-api.service';
+import { TmdbService, Movie } from './services/tmdb-api/tmdb-api.service';
+import { ApplicationStateService } from './services/application-state/application-state.service';
+import { SongCardComponent } from './components/song-card/song-card.component';
+import { MappedSpotifyTrack } from './services/spotify-api/types';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SongCardComponent],
   styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="app-container">
       <!-- Header -->
@@ -25,14 +29,14 @@ import { TmdbService, Movie } from './services/tmdb.service';
           <div class="search-container">
             <input
               type="text"
-              [(ngModel)]="searchQuery"
-              (input)="onSearchInput()"
+              [ngModel]="searchQuery()"
+              (ngModelChange)="onSearchChange($event)"
               placeholder="Search for a song..."
               class="search-input"
             />
             <button
               (click)="searchSongs()"
-              [disabled]="isSearching() || !searchQuery.trim()"
+              [disabled]="isSearching() || !searchQuery()?.trim()"
               class="search-button"
             >
               {{ isSearching() ? 'Searching...' : 'Search' }}
@@ -53,16 +57,7 @@ import { TmdbService, Movie } from './services/tmdb.service';
             <h2 class="section-title">Select a Song</h2>
             <div class="song-grid">
               @for (song of songResults(); track song.id) {
-                <div class="song-card" (click)="selectSong(song)">
-                  @if (song.albumImage) {
-                    <img [src]="song.albumImage" [alt]="song.name" class="song-image" />
-                  }
-                  <div class="song-info">
-                    <h3 class="song-name">{{ song.name }}</h3>
-                    <p class="song-artists">{{ song.artists.join(', ') }}</p>
-                    <p class="song-album">{{ song.album }}</p>
-                  </div>
-                </div>
+                <song-card [song]="song"></song-card>
               }
             </div>
           </section>
@@ -85,9 +80,7 @@ import { TmdbService, Movie } from './services/tmdb.service';
                 <div class="selected-song-info">
                   <h3 class="selected-song-name">{{ selectedSong()!.name }}</h3>
                   <p class="selected-song-artists">{{ selectedSong()!.artists.join(', ') }}</p>
-                  <button (click)="clearSelection()" class="change-song-button">
-                    Change Song
-                  </button>
+                  <button (click)="clearSelection()" class="change-song-button">Change Song</button>
                 </div>
               </div>
             </div>
@@ -154,29 +147,26 @@ import { TmdbService, Movie } from './services/tmdb.service';
   `,
 })
 export class App {
-  protected readonly title = signal('Soundtrack Cinema');
-  protected searchQuery = '';
+  spotifyService = inject(SpotifyService);
+  tmdbService = inject(TmdbService);
+  applicationStateService = inject(ApplicationStateService);
+
+  searchQuery = this.applicationStateService.searchQuery.asReadonly();
+  selectedSong = this.applicationStateService.selectedSong.asReadonly();
+
   protected isSearching = signal(false);
   protected isLoadingMovies = signal(false);
   protected errorMessage = signal('');
-  protected songResults = signal<SpotifyTrack[]>([]);
-  protected selectedSong = signal<SpotifyTrack | null>(null);
+  protected songResults = signal<MappedSpotifyTrack[]>([]);
   protected movieResults = signal<Movie[]>([]);
 
-  constructor(
-    private spotifyService: SpotifyService,
-    protected tmdbService: TmdbService
-  ) {}
-
-  onSearchInput() {
-    // Clear error when user starts typing
-    if (this.errorMessage()) {
-      this.errorMessage.set('');
-    }
+  onSearchChange(change: any) {
+    console.log('change', change);
+    this.applicationStateService.setSearchQuery(change);
   }
 
   async searchSongs() {
-    if (!this.searchQuery.trim()) {
+    if (!this.searchQuery()?.trim()) {
       return;
     }
 
@@ -185,7 +175,7 @@ export class App {
     this.songResults.set([]);
 
     try {
-      const results = await this.spotifyService.searchTracks(this.searchQuery);
+      const results = await this.spotifyService.searchTracks(this.searchQuery());
       this.songResults.set(results);
 
       if (results.length === 0) {
@@ -193,16 +183,14 @@ export class App {
       }
     } catch (error) {
       console.error('Error searching songs:', error);
-      this.errorMessage.set(
-        'Failed to search songs. Please check your Spotify API credentials.'
-      );
+      this.errorMessage.set('Failed to search songs. Please check your Spotify API credentials.');
     } finally {
       this.isSearching.set(false);
     }
   }
 
-  async selectSong(song: SpotifyTrack) {
-    this.selectedSong.set(song);
+  async selectSong(song: MappedSpotifyTrack) {
+    this.applicationStateService.selectSong(song);
     this.isLoadingMovies.set(true);
     this.movieResults.set([]);
 
@@ -220,9 +208,8 @@ export class App {
   }
 
   clearSelection() {
-    this.selectedSong.set(null);
+    this.applicationStateService.clearSelection();
     this.movieResults.set([]);
-    this.searchQuery = '';
     this.songResults.set([]);
   }
 }
