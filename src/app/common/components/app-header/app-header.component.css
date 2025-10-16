@@ -24,3 +24,32 @@
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
 }
+
+.app-header__search-section {
+  margin-bottom: 2rem;
+}
+
+.app-header__search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.app-header__search-input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 50px;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.app-header__search-input:focus {
+  outline: none;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}

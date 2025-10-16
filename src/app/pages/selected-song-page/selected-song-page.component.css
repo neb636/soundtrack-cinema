@@ -80,3 +80,10 @@
   background: #5568d3;
   transform: translateY(-2px);
 }
+
+.selected-song-page__no-results {
+  text-align: center;
+  padding: 3rem;
+  color: white;
+  font-size: 1.2rem;
+}

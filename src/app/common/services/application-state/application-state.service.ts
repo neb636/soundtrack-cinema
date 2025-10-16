@@ -1,9 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 import { MappedSpotifyTrack } from '../spotify-api/types';
+import { useDebouncedSignal } from '../../composition-functions/use-debounced-signal';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationStateService {
   searchQuery = signal('');
+  debouncedSearchQuery = useDebouncedSignal(this.searchQuery, 600);
   selectedSong = signal<MappedSpotifyTrack | null>(null);
 
   setSearchQuery(query: string) {
