@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { MappedSpotifyTrack, SpotifySearchResponse } from './types';
-import { mapSearchResponseToTrack } from './mapper';
+import { mapSpotifyTrack } from './mapper';
 
 @Injectable({ providedIn: 'root' })
 export class SpotifyService {
@@ -41,7 +41,7 @@ export class SpotifyService {
     }
   }
 
-  async searchTracks(query: string): Promise<MappedSpotifyTrack[]> {
+  async searchTracks(query: string, abortSignal?: AbortSignal): Promise<MappedSpotifyTrack[]> {
     if (!query.trim()) {
       return [];
     }
@@ -55,6 +55,7 @@ export class SpotifyService {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          signal: abortSignal,
         },
       );
 
@@ -64,7 +65,7 @@ export class SpotifyService {
 
       const data = (await response.json()) as SpotifySearchResponse;
 
-      return data.tracks.items.map((track) => mapSearchResponseToTrack(track));
+      return data.tracks.items.map((track) => mapSpotifyTrack(track));
     } catch (error) {
       console.error('Error searching tracks:', error);
       throw error;
@@ -87,14 +88,7 @@ export class SpotifyService {
 
       const track = await response.json();
 
-      return {
-        id: track.id,
-        name: track.name,
-        artists: track.artists.map((artist: any) => artist.name),
-        album: track.album.name,
-        albumImage: track.album.images[0]?.url || '',
-        previewUrl: track.preview_url,
-      };
+      return mapSpotifyTrack(track);
     } catch (error) {
       console.error('Error getting track details:', error);
       return null;

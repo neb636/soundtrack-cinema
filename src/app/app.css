@@ -1,4 +1,4 @@
-.app-container {
+.app-root__container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -6,7 +6,7 @@
 }
 
 /* Header */
-.header {
+.app-root__header {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   padding: 2rem 1rem;
@@ -14,12 +14,12 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.header-content {
+.app-root__header-content {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.title {
+.app-root__title {
   font-size: 3rem;
   font-weight: 700;
   color: white;
@@ -27,14 +27,14 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.tagline {
+.app-root__tagline {
   font-size: 1.25rem;
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
 }
 
 /* Main Content */
-.main-content {
+.app-root__main-content {
   flex: 1;
   max-width: 1200px;
   width: 100%;
@@ -43,18 +43,19 @@
 }
 
 /* Search Section */
-.search-section {
+.app-root__search-section {
   margin-bottom: 2rem;
 }
 
-.search-container {
+.app-root__search-container {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
   max-width: 600px;
   margin: 0 auto;
 }
 
-.search-input {
+.app-root__search-input {
   flex: 1;
   padding: 1rem 1.5rem;
   font-size: 1rem;
@@ -65,37 +66,39 @@
   transition: all 0.3s ease;
 }
 
-.search-input:focus {
+.app-root__search-input:focus {
   outline: none;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
 
-.search-button {
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
+.app-root__search-loading {
+  text-align: center;
   color: white;
-  background: #ff6b6b;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
-.search-button:hover:not(:disabled) {
-  background: #ff5252;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
-.search-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.app-root__song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.error-message {
+.app-root__error-message {
   max-width: 600px;
   margin: 1rem auto 0;
   padding: 1rem;
@@ -105,93 +108,14 @@
   text-align: center;
 }
 
-/* Results Section */
-.results-section {
-  animation: fadeIn 0.5s ease;
-}
-
-.section-title {
-  font-size: 2rem;
-  font-weight: 600;
-  color: white;
-  margin: 0 0 1.5rem 0;
-  text-align: center;
-}
-
-/* Song Grid */
-.song-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-/* Selected Song */
-.selected-song {
-  margin-bottom: 2rem;
-}
-
-.selected-song-card {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  background: white;
-  border-radius: 15px;
-  padding: 1.5rem;
-  max-width: 600px;
-  margin: 0 auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.selected-song-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.selected-song-info {
-  flex: 1;
-}
-
-.selected-song-name {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: #333;
-}
-
-.selected-song-artists {
-  font-size: 1rem;
-  color: #666;
-  margin: 0 0 1rem 0;
-}
-
-.change-song-button {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: white;
-  background: #667eea;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.change-song-button:hover {
-  background: #5568d3;
-  transform: translateY(-2px);
-}
-
 /* Loading */
-.loading {
+.app-root__loading {
   text-align: center;
   padding: 3rem;
   color: white;
 }
 
-.spinner {
+.app-root__spinner {
   width: 50px;
   height: 50px;
   margin: 0 auto 1rem;
@@ -207,89 +131,8 @@
   }
 }
 
-/* Movie Grid */
-.movie-results {
-  margin-top: 2rem;
-}
-
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-.movie-card {
-  background: white;
-  border-radius: 15px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.movie-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.movie-poster {
-  width: 100%;
-  height: 450px;
-  object-fit: cover;
-}
-
-.movie-poster-placeholder {
-  width: 100%;
-  height: 450px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f0f0;
-  color: #999;
-  font-size: 1rem;
-}
-
-.movie-info {
-  padding: 1.5rem;
-}
-
-.movie-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin: 0 0 0.75rem 0;
-  color: #333;
-}
-
-.movie-meta {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.movie-rating {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #ffa500;
-}
-
-.movie-year {
-  font-size: 1rem;
-  color: #666;
-}
-
-.movie-overview {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: #666;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 /* No Results */
-.no-results {
+.app-root__no-results {
   text-align: center;
   padding: 3rem;
   color: white;
@@ -297,7 +140,7 @@
 }
 
 /* Footer */
-.footer {
+.app-root__footer {
   background: rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
   text-align: center;
@@ -319,25 +162,25 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .title {
+  .app-root__title {
     font-size: 2rem;
   }
 
-  .tagline {
+  .app-root__tagline {
     font-size: 1rem;
   }
 
-  .search-container {
+  .app-root__search-container {
     flex-direction: column;
   }
 
-  .selected-song-card {
+  .app-root__selected-song-card {
     flex-direction: column;
     text-align: center;
   }
 
-  .song-grid,
-  .movie-grid {
+  .app-root__song-grid,
+  .app-root__movie-grid {
     grid-template-columns: 1fr;
   }
 }

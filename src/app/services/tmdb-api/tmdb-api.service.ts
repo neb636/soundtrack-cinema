@@ -13,14 +13,10 @@ export interface Movie {
   genres: string[];
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class TmdbService {
   private readonly baseUrl = 'https://api.themoviedb.org/3';
   private readonly imageBaseUrl = 'https://image.tmdb.org/t/p';
-
-  constructor() {}
 
   /**
    * Get full image URL
@@ -33,7 +29,7 @@ export class TmdbService {
   /**
    * Search for movies by keyword (song name, artist, etc.)
    */
-  async searchMovies(query: string): Promise<Movie[]> {
+  async searchMovies(query: string, abortSignal?: AbortSignal): Promise<Movie[]> {
     if (!query.trim()) {
       return [];
     }
@@ -45,6 +41,7 @@ export class TmdbService {
           headers: {
             'Content-Type': 'application/json',
           },
+          signal: abortSignal,
         },
       );
 
@@ -106,15 +103,6 @@ export class TmdbService {
       console.error('Error getting movie details:', error);
       return null;
     }
-  }
-
-  /**
-   * Search for movies by multiple keywords (song name + artist)
-   * This provides better results by combining song and artist information
-   */
-  async searchMoviesBySongAndArtist(songName: string, artistName: string): Promise<Movie[]> {
-    const query = `${songName} ${artistName}`;
-    return this.searchMovies(query);
   }
 
   /**
