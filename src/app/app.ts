@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, FormsModule],
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -19,6 +20,28 @@ import { RouterOutlet } from '@angular/router';
 
       <!-- Main Content -->
       <main class="app-root__main-content">
+        <section class="app-root__search-section">
+          <div class="app-root__search-container">
+            <input
+              type="text"
+              [ngModel]="searchQuery()"
+              (ngModelChange)="applicationStateService.setSearchQuery($event)"
+              placeholder="Search for a song..."
+              class="app-root__search-input"
+            />
+            @if (songSearchResource.isLoading()) {
+              <div class="app-root__search-loading">Searching...</div>
+            }
+          </div>
+
+          <!-- Error Message -->
+          <!-- @if (errorMessage()) {
+            <div class="error-message">
+              {{ errorMessage() }}
+            </div>
+          } -->
+        </section>
+
         <router-outlet></router-outlet>
       </main>
 
