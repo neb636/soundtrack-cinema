@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, resource } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { SpotifyService } from './services/spotify-api/spotify-api.service';
-import { TmdbService } from './services/tmdb-api/tmdb-api.service';
-import { ApplicationStateService } from './services/application-state/application-state.service';
-import { useDebouncedSignal } from './common/composition-functions/use-debounced-signal';
+import { ApplicationStateService } from './common/services/application-state/application-state.service';
 import { AppHeaderComponent } from './common/components/app-header/app-header.component';
 import { AppFooterComponent } from './common/components/app-footer/app-footer.component';
 
@@ -29,9 +26,7 @@ import { AppFooterComponent } from './common/components/app-footer/app-footer.co
               placeholder="Search for a song..."
               class="app-root__search-input"
             />
-            @if (songSearchResource.isLoading()) {
-              <div class="app-root__search-loading">Searching...</div>
-            }
+
           </div>
 
           <!-- Error Message -->
@@ -52,18 +47,6 @@ import { AppFooterComponent } from './common/components/app-footer/app-footer.co
   `,
 })
 export class App {
-  spotifyService = inject(SpotifyService);
-  tmdbService = inject(TmdbService);
   applicationStateService = inject(ApplicationStateService);
-
   searchQuery = this.applicationStateService.searchQuery.asReadonly();
-  selectedSong = this.applicationStateService.selectedSong.asReadonly();
-  debouncedSearchQuery = useDebouncedSignal(this.searchQuery, 600);
-
-  songSearchResource = resource({
-    params: () => ({ query: this.debouncedSearchQuery() }),
-    loader: async ({ params: { query }, abortSignal }) => {
-      return query.trim() ? this.spotifyService.searchTracks(query, abortSignal) : [];
-    },
-  });
 }

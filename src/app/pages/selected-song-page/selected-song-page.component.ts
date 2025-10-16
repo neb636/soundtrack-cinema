@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, resource } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApplicationStateService } from '../../services/application-state/application-state.service';
-import { TmdbService } from '../../services/tmdb-api/tmdb-api.service';
+import { ApplicationStateService } from '../../common/services/application-state/application-state.service';
+import { TmdbService } from '../../common/services/tmdb-api/tmdb-api.service';
 import { MovieCardComponent } from '../../common/components/movie-card/movie-card.component';
 import { useParameter } from '../../common/composition-functions/use-activated-route';
 

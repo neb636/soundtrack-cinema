@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { MappedSpotifyTrack, SpotifySearchResponse } from './types';
 import { mapSpotifyTrack } from './mapper';
 

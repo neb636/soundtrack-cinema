@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Movie, TmdbService } from '../../../services/tmdb-api/tmdb-api.service';
+import { Movie, TmdbService } from '../../services/tmdb-api/tmdb-api.service';
 
 @Component({
   selector: 'movie-card',
