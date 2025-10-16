@@ -81,10 +81,4 @@ export class SelectedSongPageComponent {
         : [];
     },
   });
-
-  popularMoviesResource = resource({
-    loader: async () => {
-      return this.tmdbService.getPopularMovies();
-    },
-  })
 }

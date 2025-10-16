@@ -15,7 +15,6 @@ import { AppFooterComponent } from './common/components/app-footer/app-footer.co
     <div class="app-root__container">
       <app-header></app-header>
 
-      <!-- Main Content -->
       <main class="app-root__main-content">
         <section class="app-root__search-section">
           <div class="app-root__search-container">
@@ -26,15 +25,7 @@ import { AppFooterComponent } from './common/components/app-footer/app-footer.co
               placeholder="Search for a song..."
               class="app-root__search-input"
             />
-
           </div>
-
-          <!-- Error Message -->
-          <!-- @if (errorMessage()) {
-            <div class="error-message">
-              {{ errorMessage() }}
-            </div>
-          } -->
         </section>
 
         <section class="app-root__route-wrapper">
