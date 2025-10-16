@@ -1,7 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, resource } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SpotifyService } from './services/spotify-api/spotify-api.service';
+import { TmdbService } from './services/tmdb-api/tmdb-api.service';
+import { ApplicationStateService } from './services/application-state/application-state.service';
+import { useDebouncedSignal } from './common/composition-functions/use-debounced-signal';
 
 @Component({
   selector: 'app-root',
@@ -52,4 +56,19 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
 })
-export class App {}
+export class App {
+  spotifyService = inject(SpotifyService);
+  tmdbService = inject(TmdbService);
+  applicationStateService = inject(ApplicationStateService);
+
+  searchQuery = this.applicationStateService.searchQuery.asReadonly();
+  selectedSong = this.applicationStateService.selectedSong.asReadonly();
+  debouncedSearchQuery = useDebouncedSignal(this.searchQuery, 600);
+
+  songSearchResource = resource({
+    params: () => ({ query: this.debouncedSearchQuery() }),
+    loader: async ({ params: { query }, abortSignal }) => {
+      return query.trim() ? this.spotifyService.searchTracks(query, abortSignal) : [];
+    },
+  });
+}
