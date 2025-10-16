@@ -1,0 +1,82 @@
+/* Movie Grid */
+.selected-song-page__movie-results {
+  margin-top: 2rem;
+}
+
+.selected-song-page__movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.selected-song-page__results-section {
+  animation: fadeIn 0.5s ease;
+}
+
+.selected-song-page__title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+/* Song Grid */
+
+/* Selected Song */
+.selected-song-page__selected-song {
+  margin-bottom: 2rem;
+}
+
+.selected-song-page__selected-song-card {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.selected-song-page__selected-song-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.selected-song-page__selected-song-info {
+  flex: 1;
+}
+
+.selected-song-page__selected-song-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.selected-song-page__selected-song-artists {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 1rem 0;
+}
+
+.selected-song-page__change-song-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  background: #667eea;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.selected-song-page__change-song-button:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+}

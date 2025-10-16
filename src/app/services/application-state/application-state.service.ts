@@ -8,6 +8,7 @@ export class ApplicationStateService {
 
   setSearchQuery(query: string) {
     this.searchQuery.set(query);
+    this.selectedSong.set(null);
   }
 
   selectSong(song: MappedSpotifyTrack) {

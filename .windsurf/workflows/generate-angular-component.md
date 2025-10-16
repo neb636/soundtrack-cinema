@@ -3,7 +3,7 @@ description: Generates a new component folder scafolding
 auto_execution_mode: 3
 ---
 
-Generate a new Angular component boilerplate based off below.
+Generate a new Angular component boilerplate based off below. Add the boilerplate to the currently selected path in sidebar.
 
 /component-name
 

@@ -36,9 +36,10 @@ export class TmdbService {
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/search/movie?api_key=${environment.tmdb.apiKey}&query=${encodeURIComponent(query)}&include_adult=false`,
+        `${this.baseUrl}/search/movie?query=${encodeURIComponent(query)}&include_adult=false`,
         {
           headers: {
+            'Authorization': `Bearer ${environment.tmdb.apiKey}`,
             'Content-Type': 'application/json',
           },
           signal: abortSignal,
@@ -74,9 +75,10 @@ export class TmdbService {
   async getMovieDetails(movieId: number): Promise<Movie | null> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/movie/${movieId}?api_key=${environment.tmdb.apiKey}`,
+        `${this.baseUrl}/movie/${movieId}`,
         {
           headers: {
+            'Authorization': `Bearer ${environment.tmdb.apiKey}`,
             'Content-Type': 'application/json',
           },
         },
@@ -111,9 +113,10 @@ export class TmdbService {
   async getPopularMovies(): Promise<Movie[]> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/movie/popular?api_key=${environment.tmdb.apiKey}&page=1`,
+        `${this.baseUrl}/movie/popular?page=1`,
         {
           headers: {
+            'Authorization': `Bearer ${environment.tmdb.apiKey}`,
             'Content-Type': 'application/json',
           },
         },

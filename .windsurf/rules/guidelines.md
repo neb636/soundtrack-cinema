@@ -20,6 +20,10 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Prefer type inference when the type is obvious
 - Avoid the `any` type; use `unknown` when type is uncertain
 
+## CSS naming
+
+- Follow component name scope BEM style for css selectors. component name movie-card => class="movie-card\_\_title" => class="movie-card--is-selected"
+
 ## Angular Best Practices
 
 - Always use standalone components over NgModules

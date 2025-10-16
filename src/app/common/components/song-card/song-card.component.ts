@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MappedSpotifyTrack } from '../../services/spotify-api/types';
+import { MappedSpotifyTrack } from '../../../services/spotify-api/types';
 
 @Component({
   selector: 'song-card',

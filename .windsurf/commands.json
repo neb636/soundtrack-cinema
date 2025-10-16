@@ -1,0 +1,12 @@
+{
+  "commands": [
+    {
+      "name": "Generate component boilerplate",
+      "command": "cascade.executeWorkflow",
+      "args": {
+        "workflowName": "generate-angular-component",
+        "folderPath": "${selectedPath}"
+      }
+    }
+  ]
+}
