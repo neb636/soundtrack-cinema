@@ -1,0 +1,65 @@
+/* Home Page Container */
+.home-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Title */
+.home-page__title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+/* Movie Grid */
+.home-page__movie-results {
+  margin-top: 2rem;
+}
+
+.home-page__movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Loading State */
+.home-page__loading {
+  text-align: center;
+  padding: 3rem;
+  color: white;
+}
+
+.home-page__spinner {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1rem;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.home-page__error {
+  text-align: center;
+  padding: 2rem;
+  color: white;
+  background: rgba(255, 107, 107, 0.2);
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.home-page__error p {
+  margin: 0;
+  font-size: 1.1rem;
+}

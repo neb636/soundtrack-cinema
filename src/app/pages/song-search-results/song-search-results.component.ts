@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, resource } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, resource, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { useDebouncedSignal } from '../../common/composition-functions/use-debounced-signal';
 import { SpotifyService } from '../../common/services/spotify-api/spotify-api.service';
 import { TmdbService } from '../../common/services/tmdb-api/tmdb-api.service';
@@ -29,6 +30,7 @@ export class SongSearchResultsComponent {
   spotifyService = inject(SpotifyService);
   tmdbService = inject(TmdbService);
   applicationStateService = inject(ApplicationStateService);
+  router = inject(Router);
 
   searchQuery = this.applicationStateService.searchQuery.asReadonly();
 
@@ -40,4 +42,13 @@ export class SongSearchResultsComponent {
       return query.trim() ? this.spotifyService.searchTracks(query, abortSignal) : [];
     },
   });
+
+  constructor() {
+    effect(() => {
+      const query = this.debouncedSearchQuery();
+      if (query.trim()) {
+        this.router.navigate(['/selected-song', query]);
+      }
+    });
+  }
 }
