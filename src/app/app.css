@@ -5,34 +5,6 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Header */
-.app-root__header {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 2rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.app-root__header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.app-root__title {
-  font-size: 3rem;
-  font-weight: 700;
-  color: white;
-  margin: 0 0 0.5rem 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.app-root__tagline {
-  font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
-}
-
 /* Main Content */
 .app-root__main-content {
   flex: 1;
@@ -137,15 +109,6 @@
   padding: 3rem;
   color: white;
   font-size: 1.2rem;
-}
-
-/* Footer */
-.app-root__footer {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 1.5rem;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: auto;
 }
 
 /* Animations */
