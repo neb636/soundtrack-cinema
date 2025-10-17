@@ -35,6 +35,4 @@ export class SongSearchResultsComponent {
       return query.trim() ? this.spotifyService.searchTracks(query, abortSignal) : [];
     },
   });
-
-
 }
