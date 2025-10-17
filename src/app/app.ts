@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { AppHeaderComponent } from './common/components/app-header/app-header.component';
 import { AppFooterComponent } from './common/components/app-footer/app-footer.component';
-import { useUpdateNavigationOnSearchQueryChange } from './common/effects/use-update-navigation-on-search-query-change';
+import { navigateOnSearchQueryChangeEffect } from './common/effects/navigate-on-search-query-change.effect';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +23,7 @@ import { useUpdateNavigationOnSearchQueryChange } from './common/effects/use-upd
 export class App {
 
   constructor() {
-    // Global routing effects
-    useUpdateNavigationOnSearchQueryChange()
+    // Global effects
+    navigateOnSearchQueryChangeEffect()
   }
 }

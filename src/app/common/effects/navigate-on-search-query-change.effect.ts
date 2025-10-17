@@ -2,7 +2,7 @@ import { effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationStateService } from '../services/application-state/application-state.service';
 
-export const useUpdateNavigationOnSearchQueryChange = () => {
+export const navigateOnSearchQueryChangeEffect = () => {
   const applicationStateService = inject(ApplicationStateService);
   const router = inject(Router);
 
