@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { SelectedSongPageComponent } from './pages/selected-song-page/selected-song-page.component';
-import { MovieDetailComponent } from './pages/movie-detail/movie-detail.component';
-import { SongSearchResultsComponent } from './pages/song-search-results/song-search-results.component';
+import { MovieDetailPageComponent } from './pages/movie-detail-page/movie-detail-page.component';
+import { SearchResultsPageComponent } from './pages/search-results-page/search-results-page.component';
 
 export const routes: Routes = [
   {
@@ -12,7 +12,7 @@ export const routes: Routes = [
   },
   {
     path: 'search-results',
-    component: SongSearchResultsComponent,
+    component: SearchResultsPageComponent,
     title: 'Search Results - Movie Recommendations'
   },
   {
@@ -22,7 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'movie/:id',
-    component: MovieDetailComponent,
+    component: MovieDetailPageComponent,
     title: 'Movie Details - Movie Recommendations'
   },
   {

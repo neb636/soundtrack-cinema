@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, resource } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TmdbService } from '../../common/services/tmdb-api/tmdb-api.service';
+import { TmdbApiService } from '../../common/services/tmdb-api/tmdb-api.service';
 import { MovieCardComponent } from '../../common/components/movie-card/movie-card.component';
 
 @Component({
@@ -41,7 +41,7 @@ import { MovieCardComponent } from '../../common/components/movie-card/movie-car
   </section>`,
 })
 export class HomePageComponent {
-  tmdbService = inject(TmdbService);
+  tmdbService = inject(TmdbApiService);
 
   moviesResource = resource({
     loader: async ({ abortSignal }) => {

@@ -1,20 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-
-export interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  releaseDate: string;
-  rating: number;
-  voteCount: number;
-  posterPath: string;
-  backdropPath: string;
-  genres: string[];
-}
+import { Movie } from './types';
 
 @Injectable({ providedIn: 'root' })
-export class TmdbService {
+export class TmdbApiService {
   private readonly baseUrl = 'https://api.themoviedb.org/3';
   private readonly imageBaseUrl = 'https://image.tmdb.org/t/p';
 

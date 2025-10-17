@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, inject, resource } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicationStateService } from '../../common/services/application-state/application-state.service';
-import { TmdbService } from '../../common/services/tmdb-api/tmdb-api.service';
+import { TmdbApiService } from '../../common/services/tmdb-api/tmdb-api.service';
 import { MovieCardComponent } from '../../common/components/movie-card/movie-card.component';
-import { useParameter } from '../../common/composition-functions/use-activated-route';
+import { useParameter } from '../../common/composables/use-activated-route';
 
 @Component({
   selector: 'selected-song-page',
@@ -64,7 +64,7 @@ import { useParameter } from '../../common/composition-functions/use-activated-r
 })
 export class SelectedSongPageComponent {
   applicationStateService = inject(ApplicationStateService);
-  tmdbService = inject(TmdbService);
+  tmdbService = inject(TmdbApiService);
 
   selectedSong = this.applicationStateService.selectedSong.asReadonly();
 

@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { MappedSpotifyTrack } from '../spotify-api/types';
-import { useDebouncedSignal } from '../../composition-functions/use-debounced-signal';
+import { useDebouncedSignal } from '../../composables/use-debounced-signal';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationStateService {

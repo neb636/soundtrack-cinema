@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Movie, TmdbService } from '../../services/tmdb-api/tmdb-api.service';
+import {  TmdbApiService } from '../../services/tmdb-api/tmdb-api.service';
+import { Movie } from '../../services/tmdb-api/types';
 
 @Component({
   selector: 'movie-card',
@@ -34,7 +35,7 @@ import { Movie, TmdbService } from '../../services/tmdb-api/tmdb-api.service';
 </div>`,
 })
 export class MovieCardComponent {
-  tmdbService = inject(TmdbService);
+  tmdbService = inject(TmdbApiService);
 
   movie = input.required<Movie>();
 
