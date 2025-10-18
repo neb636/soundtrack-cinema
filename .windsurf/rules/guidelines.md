@@ -32,7 +32,66 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Implement lazy loading for feature routes
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
 - Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
+- `NgOptimizedImage` does not work for inline base64 images.
+- Use modern reactive Angular with Composables and Effects
+
+
+## Angular Composables
+
+Small composable functions are great for code reuse. They are easy to test and can be composed using other composables.
+
+- Use composables when looking for ways to encapsulate reusable common logic
+- Composables should be small and focused on a single responsibility
+- Don't put different concerns in the same composable
+
+```use-debounced-signal.composable.ts
+export function useDebouncedSignal<T>(sourceSignal: Signal<T>, delayMs: number = 300): Signal<T> {
+  const debouncedSignal = signal<T>(sourceSignal());
+
+  const debouncedUpdate = debounce((value: T) => {
+    debouncedSignal.set(value);
+  }, delayMs);
+
+  effect(() => {
+    const value = sourceSignal();
+    debouncedUpdate(value);
+  });
+
+  return debouncedSignal.asReadonly();
+}
+```
+
+#### Effects
+
+- When we need side effects to reactive state in app we use effects
+- To keep things clean encapsulate effects in wrapper function that keeps all related logic together
+- Don't put different concerns in the same effect wrapper function
+- When creating effects follow file naming pattern /effects 
+
+```update-query-param-on-search-change.effect.ts
+export const updateQueryParamOnSearchChangeEffect = () => {
+  const applicationStateService = inject(ApplicationStateService);
+  const activatedRoute = inject(ActivatedRoute);
+  const router = inject(Router);
+
+  effect(() => {
+    const debouncedSearchQuery = applicationStateService.debouncedSearchQuery();
+
+    router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { searchQuery: debouncedSearchQuery },
+      queryParamsHandling: 'merge'
+    });
+  })
+};
+```
+- 
+- 
+- 
+- 
+- 
+- 
+- 
 
 ## Components
 

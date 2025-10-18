@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { AppHeaderComponent } from './common/components/app-header/app-header.component';
 import { AppFooterComponent } from './common/components/app-footer/app-footer.component';
-import { navigateOnSearchQueryChangeEffect } from './common/effects/navigate-on-search-query-change.effect';
+import { syncQueryParamsEffect } from './common/effects/sync-query-params.effect';
+import { ApplicationStateService } from './common/services/application-state/application-state.service';
 
 @Component({
   selector: 'app-root',
@@ -21,9 +22,17 @@ import { navigateOnSearchQueryChangeEffect } from './common/effects/navigate-on-
   `,
 })
 export class App {
+  applicationStateService = inject(ApplicationStateService);
+
+  debouncedSearchQuery = this.applicationStateService.debouncedSearchQuery;
 
   constructor() {
+
     // Global effects
-    navigateOnSearchQueryChangeEffect()
+    syncQueryParamsEffect({
+      queryParams: computed(() => ({
+        searchQuery: this.debouncedSearchQuery()
+      }))
+    })
   }
 }
