@@ -14,7 +14,7 @@ export class LegacySpotifyApiService {
       return this.accessToken()!;
     }
 
-    const credentials = btoa(`${environment.spotify.clientId}:${environment.spotify.clientSecret}`);
+    const credentials = btoa(`${environment.spotify.clientId}:`);
 
     try {
       const response = await fetch('https://accounts.spotify.com/api/token', {

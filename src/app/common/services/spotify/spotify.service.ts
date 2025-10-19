@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SpotifyApi } from '@spotify/web-api-ts-sdk';
+import { MaxInt, SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -49,67 +49,67 @@ export class SpotifyService {
 
   // Convenience methods that wrap SDK calls
 
-  async search(params: {
+  async paginatedSearch(params: {
     query: string;
     types: Array<'album' | 'artist' | 'playlist' | 'track'>;
-    offset?: number;
-    limit?: number;
+    offset: number;
+    limit: MaxInt<50>;
   }) {
     const { query, types, offset, limit } = params;
-
     const sdk = this.getSDK();
-    return await sdk.search(query, types, undefined,limit, offset);
+
+    return await sdk.search(query, types, undefined, limit, offset);
   }
 
-  getAlbum(id: string, market?: string) {
+  getAlbum(id: string) {
     const sdk = this.getSDK();
     return sdk.albums.get(id);
   }
 
 
-   getArtist(id: string) {
+  getArtist(id: string) {
     const sdk = this.getSDK();
     return sdk.artists.get(id);
   }
 
-   getPlaylist(id: string) {
+  getPlaylist(id: string) {
     const sdk = this.getSDK();
-    return sdk.playlists.getPlaylist(id, );
+    return sdk.playlists.getPlaylist(id,);
   }
 
-   getTrack(id: string) {
+  getTrack(id: string) {
     const sdk = this.getSDK();
     return sdk.tracks.get(id);
   }
 
-   getCurrentUserPlaylists(limit?: number, offset?: number) {
+  getPaginatedUserPlaylists(limit?: MaxInt<50>, offset?: number) {
     const sdk = this.getSDK();
     return sdk.currentUser.playlists.playlists(limit, offset);
   }
 
-   getCurrentUserProfile() {
+  getCurrentUserProfile() {
     const sdk = this.getSDK();
-    return  sdk.currentUser.profile();
+    return sdk.currentUser.profile();
   }
 
-   getTopArtists(timeRange?: 'short_term' | 'medium_term' | 'long_term', limit?: number) {
+  getTopArtists(timeRange?: 'short_term' | 'medium_term' | 'long_term', limit?: MaxInt<50>) {
     const sdk = this.getSDK();
-    return  sdk.currentUser.topItems('artists', timeRange, limit);
+    return sdk.currentUser.topItems('artists', timeRange, limit);
   }
 
 
-   getTopTracks(timeRange?: 'short_term' | 'medium_term' | 'long_term', limit?: number) {
+  getTopTracks(timeRange?: 'short_term' | 'medium_term' | 'long_term', limit?: MaxInt<50>) {
     const sdk = this.getSDK();
-    return  sdk.currentUser.topItems('tracks', timeRange, limit);
+    return sdk.currentUser.topItems('tracks', timeRange, limit);
   }
 
 
   async getAllPages<T>(
-    fetcher: (limit: number, offset: number) => Promise<{ items: T[]; total: number; next: string | null }>
+    fetcher: (limit: MaxInt<50>, offset: number) => Promise<{ items: T[]; total: number; next: string | null }>
   ): Promise<T[]> {
     const allItems: T[] = [];
     let offset = 0;
-    const limit = 50;
+    const limit: MaxInt<50> = 50;
 
     while (true) {
       const page = await fetcher(limit, offset);
@@ -127,7 +127,7 @@ export class SpotifyService {
 
   async getAllUserPlaylists() {
     return this.getAllPages((limit, offset) =>
-      this.getCurrentUserPlaylists(limit, offset)
+      this.getPaginatedUserPlaylists(limit, offset)
     );
   }
 }
