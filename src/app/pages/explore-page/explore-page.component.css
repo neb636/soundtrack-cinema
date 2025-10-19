@@ -21,6 +21,25 @@
   text-align: center;
 }
 
+.explore-page__error {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: rgba(255, 107, 107, 0.1);
+  border: 2px solid rgba(255, 107, 107, 0.5);
+  color: #ff6b6b;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.explore-page__search-loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
 .explore-page__loading {
   text-align: center;
   padding: 3rem;

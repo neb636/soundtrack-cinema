@@ -17,18 +17,27 @@ export class SpotifyService {
     'user-library-read',
   ];
 
+  constructor() {
+    // Initialize SDK on service creation to restore any existing session
+    this.initializeSDK();
+  }
+
+  private initializeSDK(): void {
+    if (!this.sdk) {
+      this.sdk = SpotifyApi.withUserAuthorization(
+        this.clientId,
+        this.redirectUri,
+        this.scopes
+      );
+    }
+  }
+
   async authenticate(): Promise<SpotifyApi> {
-    if (this.sdk) {
-      return this.sdk;
+    if (!this.sdk) {
+      this.initializeSDK();
     }
 
-    this.sdk = SpotifyApi.withUserAuthorization(
-      this.clientId,
-      this.redirectUri,
-      this.scopes
-    );
-
-    return this.sdk;
+    return this.sdk!;
   }
 
   getSDK(): SpotifyApi {
@@ -39,7 +48,16 @@ export class SpotifyService {
   }
 
   isAuthenticated(): boolean {
-    return this.sdk?.getAccessToken() !== null;
+    if (!this.sdk) {
+      return false;
+    }
+    
+    try {
+      const token = this.sdk.getAccessToken();
+      return token !== null && token !== undefined;
+    } catch {
+      return false;
+    }
   }
 
   logout(): void {

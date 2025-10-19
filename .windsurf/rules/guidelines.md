@@ -35,6 +35,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - `NgOptimizedImage` does not work for inline base64 images.
 - Use modern reactive Angular with Composables and Effects
 - When making api requests use resource function instead of `HttpClient`
+- Do NOT make injected items `readonly`
 
 #### Angular Composables
 
@@ -96,6 +97,7 @@ export const updateQueryParamOnSearchChangeEffect = () => {
 - Prefer Reactive forms instead of Template-driven ones
 - Do NOT use `ngClass`, use `class` bindings instead
 - Do NOT use `ngStyle`, use `style` bindings instead
+- Do NOT use `private` in components since they don't have end consumers
 
 ## State Management
 
