@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApplicationStateService } from '../../services/application-state/application-state.service';
 
 @Component({
   standalone: true,
@@ -16,19 +15,6 @@ import { ApplicationStateService } from '../../services/application-state/applic
       </div>
     </header>
 
-    <section class="app-header__search-section">
-      <div class="app-header__search-container">
-        <input
-          type="text"
-          [ngModel]="searchQuery()"
-          (ngModelChange)="applicationStateService.setSearchQuery($event)"
-          placeholder="Search for a song..."
-          class="app-header__search-input"
-        />
-      </div>
-    </section>`,
+  `,
 })
-export class AppHeaderComponent {
-  applicationStateService = inject(ApplicationStateService);
-  searchQuery = this.applicationStateService.searchQuery.asReadonly();
-}
+export class AppHeaderComponent { }

@@ -1,5 +1,5 @@
 ---
-trigger: manual
+trigger: always_on
 ---
 
 You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
@@ -34,9 +34,9 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use `NgOptimizedImage` for all static images.
 - `NgOptimizedImage` does not work for inline base64 images.
 - Use modern reactive Angular with Composables and Effects
+- When making api requests use resource function instead of `HttpClient`
 
-
-## Angular Composables
+#### Angular Composables
 
 Small composable functions are great for code reuse. They are easy to test and can be composed using other composables.
 
@@ -66,7 +66,7 @@ export function useDebouncedSignal<T>(sourceSignal: Signal<T>, delayMs: number =
 - When we need side effects to reactive state in app we use effects
 - To keep things clean encapsulate effects in wrapper function that keeps all related logic together
 - Don't put different concerns in the same effect wrapper function
-- When creating effects follow file naming pattern /effects 
+- When creating effects follow file naming pattern /effects
 
 ```update-query-param-on-search-change.effect.ts
 export const updateQueryParamOnSearchChangeEffect = () => {
@@ -85,13 +85,6 @@ export const updateQueryParamOnSearchChangeEffect = () => {
   })
 };
 ```
-- 
-- 
-- 
-- 
-- 
-- 
-- 
 
 ## Components
 

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ApplicationStateService } from '../../common/services/application-state/application-state.service';
 import { TmdbApiService } from '../../common/services/tmdb-api/tmdb-api.service';
 import { MovieCardComponent } from '../../common/components/movie-card/movie-card.component';
-import { useParameter } from '../../common/composables/use-activated-route';
 
 @Component({
   selector: 'selected-song-page',
@@ -67,8 +66,6 @@ export class SelectedSongPageComponent {
   tmdbService = inject(TmdbApiService);
 
   selectedSong = this.applicationStateService.selectedSong.asReadonly();
-
-  selectedSongName = useParameter('songName')
 
   moviesResource = resource({
     params: () => ({

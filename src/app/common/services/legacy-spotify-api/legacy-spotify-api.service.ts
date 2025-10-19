@@ -4,7 +4,7 @@ import { MappedSpotifyTrack, SpotifySearchResponse } from './types';
 import { mapSpotifyTrack } from './mapper';
 
 @Injectable({ providedIn: 'root' })
-export class SpotifyApiService {
+export class LegacySpotifyApiService {
   private accessToken = signal<string | null>(null);
   private tokenExpiry = signal<number>(0);
 
