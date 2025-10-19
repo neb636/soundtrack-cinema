@@ -5,6 +5,7 @@ import { MovieDetailPageComponent } from './pages/movie-detail-page/movie-detail
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { CallbackPageComponent } from './pages/callback-page/callback-page.component';
 import { authGuard } from './common/guards/auth.guard';
+import { AuthenticatedLayoutComponent } from './common/layouts/authenticated-layout/authenticated-layout.component';
 
 export const routes: Routes = [
   {
@@ -18,27 +19,31 @@ export const routes: Routes = [
     title: 'Logging in...'
   },
   {
-    path: 'explore',
-    component: ExplorePageComponent,
-    canActivate: [authGuard],
-    title: 'Explore'
-  },
-  {
-    path: 'selected-song/:songName',
-    component: SelectedSongPageComponent,
-    canActivate: [authGuard],
-    title: 'Selected Song - Movie Recommendations'
-  },
-  {
-    path: 'movie/:id',
-    component: MovieDetailPageComponent,
-    canActivate: [authGuard],
-    title: 'Movie Details - Movie Recommendations'
-  },
-  {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
+    component: AuthenticatedLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'explore',
+        component: ExplorePageComponent,
+        title: 'Explore'
+      },
+      {
+        path: 'selected-song/:songName',
+        component: SelectedSongPageComponent,
+        title: 'Selected Song - Movie Recommendations'
+      },
+      {
+        path: 'movie/:id',
+        component: MovieDetailPageComponent,
+        title: 'Movie Details - Movie Recommendations'
+      },
+      {
+        path: '',
+        redirectTo: 'explore',
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: '**',
