@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MappedSpotifyTrack } from '../../services/spotify-api/types';
 
 @Component({
   selector: 'song-card',
@@ -19,5 +18,5 @@ import { MappedSpotifyTrack } from '../../services/spotify-api/types';
   </div>`,
 })
 export class SongCardComponent {
-  song = input<MappedSpotifyTrack>();
+  song = input<any>();
 }
