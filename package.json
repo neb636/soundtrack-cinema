@@ -30,6 +30,7 @@
     "@angular/router": "^20.3.0",
     "@spotify/web-api-ts-sdk": "^1.2.0",
     "lodash-es": "^4.17.21",
+    "ng-reactive-utils": "^0.1.1-beta.0",
     "ngx-infinite-scroll": "^20.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

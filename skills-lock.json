@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "ng-reactive-utils": {
+      "source": "neb636/ng-reactive-utils",
+      "sourceType": "github",
+      "computedHash": "ad4899ddc9ce2b4a5d23fa94406622eabebca1cd5f7391ff7cb6c1012cdbbebe"
+    }
+  }
+}
