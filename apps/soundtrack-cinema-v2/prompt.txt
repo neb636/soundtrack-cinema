@@ -1,0 +1,8 @@
+Read PROJECT_SPEC.md and all files in spec/contracts/. Then execute the
+orchestrator instructions in Section 8 of PROJECT_SPEC.md exactly as written.
+Rules:
+- Use model "claude-sonnet-4-6" for ALL subagents (pass it as the model
+  parameter in every Agent tool call).
+- Do NOT skip the ng build verification between waves.
+- If a wave's build fails, stop and report the errors before proceeding.
+- Each subagent must read its task file from spec/tasks/ before writing any code.
