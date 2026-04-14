@@ -1,7 +1,7 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { SpotifyUser } from '../../../../spec/contracts/types';
 import { environment } from '../../../environments/environment';

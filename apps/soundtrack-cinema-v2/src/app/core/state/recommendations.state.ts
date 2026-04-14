@@ -30,7 +30,7 @@ export class RecommendationsStateService {
   });
 
   // Actions
-  loadForTrack(track: SpotifyTrack): void {
+  async loadForTrack(track: SpotifyTrack): Promise<void> {
     // Skip if same track already successfully loaded
     if (this.trackId() === track.id && this.status() === 'success') return;
 
@@ -39,16 +39,14 @@ export class RecommendationsStateService {
     this.result.set(null);
     this.error.set(null);
 
-    this.recService.getRecommendationsForTrack(track).subscribe({
-      next: (result) => {
-        this.result.set(result);
-        this.status.set('success');
-      },
-      error: () => {
-        this.error.set('Failed to load recommendations. Please try again.');
-        this.status.set('error');
-      },
-    });
+    try {
+      const result = await this.recService.getRecommendationsForTrack(track);
+      this.result.set(result);
+      this.status.set('success');
+    } catch {
+      this.error.set('Failed to load recommendations. Please try again.');
+      this.status.set('error');
+    }
   }
 
   setMinRating(rating: number): void {

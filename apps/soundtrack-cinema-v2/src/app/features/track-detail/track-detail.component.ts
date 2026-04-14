@@ -106,19 +106,16 @@ export class TrackDetailComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  private loadTrack(id: string): void {
-    this.spotifyService.getTrack(id).subscribe({
-      next: (track) => {
-        this.track.set(track);
-        this.trackLoading.set(false);
-        this.recsState.loadForTrack(track);
-        // Announce to screen readers
-        this.liveAnnouncer.announce(`Loading movie recommendations for ${track.name}`);
-      },
-      error: () => {
-        this.trackError.set('Could not load track. Please go back and try again.');
-        this.trackLoading.set(false);
-      },
-    });
+  private async loadTrack(id: string): Promise<void> {
+    try {
+      const track = await this.spotifyService.getTrack(id);
+      this.track.set(track);
+      this.trackLoading.set(false);
+      this.recsState.loadForTrack(track);
+      this.liveAnnouncer.announce(`Loading movie recommendations for ${track.name}`);
+    } catch {
+      this.trackError.set('Could not load track. Please go back and try again.');
+      this.trackLoading.set(false);
+    }
   }
 }

@@ -1,7 +1,6 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { firstValueFrom } from 'rxjs';
 
 import { SpotifyAuthService } from '../../core/auth/spotify-auth.service';
 import { AuthStateService } from '../../core/state/auth.state';
@@ -85,7 +84,7 @@ export class HomeComponent {
   private async loadTopTracks(): Promise<void> {
     this.topTracksLoading.set(true);
     try {
-      const result = await firstValueFrom(this.spotifyService.getTopTracks());
+      const result = await this.spotifyService.getTopTracks();
       this.topTracks.set(result.items);
       this.liveAnnouncer.announce('Your top tracks loaded');
     } catch {
@@ -98,7 +97,7 @@ export class HomeComponent {
   private async loadPopularMovies(): Promise<void> {
     this.popularMoviesLoading.set(true);
     try {
-      const result = await firstValueFrom(this.tmdbService.getPopularMovies());
+      const result = await this.tmdbService.getPopularMovies();
       this.popularMovies.set(result.results);
       this.liveAnnouncer.announce('Popular movies loaded');
     } catch {

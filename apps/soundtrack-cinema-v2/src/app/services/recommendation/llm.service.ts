@@ -1,6 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import Anthropic from '@anthropic-ai/sdk';
 import { LLMMovieSuggestion, LLMRecommendationRequest } from '../../../../spec/contracts/types';
 import { ENVIRONMENT_TOKEN } from '../../core/tokens/environment.token';
@@ -13,9 +11,9 @@ export class LlmService {
    * Call Claude Haiku to get movie suggestions based on song sentiment.
    * Returns empty array if no API key is configured.
    */
-  getMovieSuggestions(request: LLMRecommendationRequest): Observable<LLMMovieSuggestion[]> {
+  async getMovieSuggestions(request: LLMRecommendationRequest): Promise<LLMMovieSuggestion[]> {
     if (!this.env.anthropic.apiKey) {
-      return of([]);
+      return [];
     }
 
     const anthropic = new Anthropic({
@@ -39,27 +37,21 @@ Example response:
 
 Respond with JSON only, no other text.`;
 
-    return from(
-      anthropic.messages.create({
+    try {
+      const response = await anthropic.messages.create({
         model: this.env.anthropic.model,
         max_tokens: 512,
         temperature: 0.7,
         messages: [{ role: 'user', content: prompt }],
-      })
-    ).pipe(
-      map(response => {
-        const content = response.content[0];
-        if (content.type !== 'text') {
-          return [];
-        }
-        try {
-          const parsed = JSON.parse(content.text) as LLMMovieSuggestion[];
-          return Array.isArray(parsed) ? parsed : [];
-        } catch {
-          return [];
-        }
-      }),
-      catchError(() => of([] as LLMMovieSuggestion[]))
-    );
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') return [];
+
+      const parsed = JSON.parse(content.text) as LLMMovieSuggestion[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
   }
 }

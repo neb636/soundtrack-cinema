@@ -35,18 +35,16 @@ export class PlaylistStateService {
   );
 
   // Actions
-  loadPlaylists(): void {
+  async loadPlaylists(): Promise<void> {
     this.status.set('loading');
-    this.spotifyService.getMyPlaylists().subscribe({
-      next: (result) => {
-        this.playlists.set(result.items);
-        this.status.set('success');
-      },
-      error: () => {
-        this.error.set('Could not load playlists.');
-        this.status.set('error');
-      },
-    });
+    try {
+      const result = await this.spotifyService.getMyPlaylists();
+      this.playlists.set(result.items);
+      this.status.set('success');
+    } catch {
+      this.error.set('Could not load playlists.');
+      this.status.set('error');
+    }
   }
 
   selectPlaylist(id: string): void {
@@ -57,39 +55,33 @@ export class PlaylistStateService {
     this.loadTracksForSelected(id);
   }
 
-  loadRecommendations(): void {
+  async loadRecommendations(): Promise<void> {
     const playlist = this.selectedPlaylist();
     if (!playlist || !this.canGenerateRecommendations()) return;
 
     this.recommendationsStatus.set('loading');
-    this.recService
-      .getRecommendationsForPlaylist(playlist, this.tracks())
-      .subscribe({
-        next: (result) => {
-          this.recommendations.set(result);
-          this.recommendationsStatus.set('success');
-        },
-        error: () => {
-          this.error.set('Failed to generate recommendations.');
-          this.recommendationsStatus.set('error');
-        },
-      });
+    try {
+      const result = await this.recService.getRecommendationsForPlaylist(playlist, this.tracks());
+      this.recommendations.set(result);
+      this.recommendationsStatus.set('success');
+    } catch {
+      this.error.set('Failed to generate recommendations.');
+      this.recommendationsStatus.set('error');
+    }
   }
 
-  private loadTracksForSelected(playlistId: string): void {
+  private async loadTracksForSelected(playlistId: string): Promise<void> {
     this.tracksStatus.set('loading');
-    this.spotifyService.getPlaylist(playlistId).subscribe({
-      next: (playlist) => {
-        const tracks = (playlist.tracks.items ?? [])
-          .map(item => item.track)
-          .filter((t): t is SpotifyTrack => t !== null);
-        this.tracks.set(tracks);
-        this.tracksStatus.set('success');
-      },
-      error: () => {
-        this.error.set('Could not load playlist tracks.');
-        this.tracksStatus.set('error');
-      },
-    });
+    try {
+      const playlist = await this.spotifyService.getPlaylist(playlistId);
+      const tracks = (playlist.tracks.items ?? [])
+        .map(item => item.track)
+        .filter((t): t is SpotifyTrack => t !== null);
+      this.tracks.set(tracks);
+      this.tracksStatus.set('success');
+    } catch {
+      this.error.set('Could not load playlist tracks.');
+      this.tracksStatus.set('error');
+    }
   }
 }

@@ -41,15 +41,12 @@ export class MovieDetailComponent implements OnInit {
       this.router.navigate(['/']);
       return;
     }
-    this.tmdbService.getMovie(+id).subscribe({
-      next: (movie) => {
-        this.movie.set(movie);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Movie not found.');
-        this.loading.set(false);
-      },
+    this.tmdbService.getMovie(+id).then(movie => {
+      this.movie.set(movie);
+      this.loading.set(false);
+    }).catch(() => {
+      this.error.set('Movie not found.');
+      this.loading.set(false);
     });
   }
 
