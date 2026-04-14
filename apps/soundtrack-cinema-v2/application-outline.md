@@ -14,14 +14,12 @@ Soundtrack Cinema is a modern web application that bridges the gap between music
 
 Generally a 6.0 imdb rating is the cut off of what we want to recommend for movies
 
-
 ## Tech
 
 Angular
 Angular Aria - with our own custom CSS
 lodash-es
 singularity
-
 
 # Proposed APIs 
 
