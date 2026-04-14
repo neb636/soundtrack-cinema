@@ -68,6 +68,7 @@ Open a dedicated terminal tab for this. Run from `apps/soundtrack-cinema-v2/`:
 ```bash
 claude \
   --model claude-opus-4-6 \
+  --dangerously-skip-permissions \
   --max-turns 100 \
   --allowedTools "Agent,Bash,Read,Write,Edit,Glob,Grep,TodoWrite,TodoRead" \
   2>&1 | tee reports/orchestration-log.log
