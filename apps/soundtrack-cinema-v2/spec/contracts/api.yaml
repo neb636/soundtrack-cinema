@@ -1,0 +1,400 @@
+openapi: "3.0.3"
+info:
+  title: Soundtrack Cinema v2 — External API Contracts
+  description: |
+    Documents all third-party API endpoints consumed by the Soundtrack Cinema
+    frontend. This is a READ-ONLY contract file. No subagent may modify it
+    without orchestrator approval.
+  version: "1.0.0"
+
+servers:
+  - url: https://api.spotify.com/v1
+    description: Spotify Web API
+  - url: https://accounts.spotify.com
+    description: Spotify Accounts (OAuth)
+  - url: https://api.themoviedb.org/3
+    description: TMDB (The Movie Database)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SECURITY SCHEMES
+# ─────────────────────────────────────────────────────────────────────────────
+components:
+  securitySchemes:
+    SpotifyOAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://accounts.spotify.com/authorize
+          tokenUrl: https://accounts.spotify.com/api/token
+          scopes:
+            user-read-private: Read private user profile
+            user-read-email: Read user email
+            user-top-read: Read user top artists and tracks
+            playlist-read-private: Read user private playlists
+            playlist-read-collaborative: Read collaborative playlists
+    TMDBBearer:
+      type: http
+      scheme: bearer
+      description: |
+        Bearer token from environment.tmdb.apiKey sent as
+        Authorization: Bearer <token>
+
+  schemas:
+    SpotifyTrack:
+      $ref: "./types.ts#/SpotifyTrack"
+    TMDBMovie:
+      $ref: "./types.ts#/TMDBMovie"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SPOTIFY ENDPOINTS
+# ─────────────────────────────────────────────────────────────────────────────
+paths:
+
+  # OAuth — Token Exchange (PKCE)
+  /api/token:
+    post:
+      servers:
+        - url: https://accounts.spotify.com
+      summary: Exchange authorization code for access token (PKCE)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [grant_type, code, redirect_uri, client_id, code_verifier]
+              properties:
+                grant_type:
+                  type: string
+                  enum: [authorization_code]
+                code:
+                  type: string
+                redirect_uri:
+                  type: string
+                client_id:
+                  type: string
+                code_verifier:
+                  type: string
+      responses:
+        "200":
+          description: Token response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+                  refresh_token:
+                    type: string
+                  scope:
+                    type: string
+
+  # Spotify — Current User
+  /me:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get current Spotify user profile
+      security:
+        - SpotifyOAuth: [user-read-private, user-read-email]
+      responses:
+        "200":
+          description: SpotifyUser object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  display_name: { type: string, nullable: true }
+                  email: { type: string }
+                  images:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url: { type: string }
+                        height: { type: integer, nullable: true }
+                        width: { type: integer, nullable: true }
+                  country: { type: string }
+                  product: { type: string, enum: [premium, free, open] }
+                  external_urls:
+                    type: object
+                    properties:
+                      spotify: { type: string }
+
+  # Spotify — Search
+  /search:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Search for tracks, artists, albums
+      security:
+        - SpotifyOAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+          description: Search query string
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [track, artist, album, playlist]
+          description: Comma-separated list of item types
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20, minimum: 1, maximum: 50 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+        - name: market
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Search results containing tracks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tracks:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/SpotifyTrack"
+                      total: { type: integer }
+                      limit: { type: integer }
+                      offset: { type: integer }
+                      next: { type: string, nullable: true }
+                      previous: { type: string, nullable: true }
+
+  # Spotify — Track
+  /tracks/{id}:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get a single Spotify track by ID
+      security:
+        - SpotifyOAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: SpotifyTrack object
+
+  # Spotify — Artist
+  /artists/{id}:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get a Spotify artist by ID (includes genres)
+      security:
+        - SpotifyOAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: SpotifyArtist with images and genres
+
+  # Spotify — Album
+  /albums/{id}:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get a Spotify album by ID
+      security:
+        - SpotifyOAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: SpotifyAlbum object
+
+  # Spotify — User Playlists
+  /me/playlists:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get current user's playlists
+      security:
+        - SpotifyOAuth: [playlist-read-private, playlist-read-collaborative]
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20, maximum: 50 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          description: Paginated list of playlists
+
+  # Spotify — Playlist
+  /playlists/{id}:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get a Spotify playlist by ID (includes tracks)
+      security:
+        - SpotifyOAuth: [playlist-read-private]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: fields
+          in: query
+          schema: { type: string }
+          description: Comma-separated list of fields to return
+      responses:
+        "200":
+          description: SpotifyPlaylist with tracks array
+
+  # Spotify — User Top Tracks
+  /me/top/tracks:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get user's top tracks
+      security:
+        - SpotifyOAuth: [user-top-read]
+      parameters:
+        - name: time_range
+          in: query
+          schema:
+            type: string
+            enum: [short_term, medium_term, long_term]
+            default: medium_term
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20, maximum: 50 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          description: Paginated top tracks
+
+  # Spotify — User Top Artists
+  /me/top/artists:
+    get:
+      servers:
+        - url: https://api.spotify.com/v1
+      summary: Get user's top artists
+      security:
+        - SpotifyOAuth: [user-top-read]
+      parameters:
+        - name: time_range
+          in: query
+          schema:
+            type: string
+            enum: [short_term, medium_term, long_term]
+            default: medium_term
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20, maximum: 50 }
+      responses:
+        "200":
+          description: Paginated top artists
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TMDB ENDPOINTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+  # TMDB — Search Movies
+  /search/movie:
+    get:
+      servers:
+        - url: https://api.themoviedb.org/3
+      summary: Search for movies by query string
+      security:
+        - TMDBBearer: []
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema: { type: string }
+          description: Movie search query (song title + artist)
+        - name: include_adult
+          in: query
+          schema: { type: boolean, default: false }
+        - name: language
+          in: query
+          schema: { type: string, default: en-US }
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+      responses:
+        "200":
+          description: TMDBSearchResult
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TMDBMovie"
+                  total_results: { type: integer }
+                  total_pages: { type: integer }
+                  page: { type: integer }
+
+  # TMDB — Movie Detail
+  /movie/{movieId}:
+    get:
+      servers:
+        - url: https://api.themoviedb.org/3
+      summary: Get full movie details including IMDB ID
+      security:
+        - TMDBBearer: []
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: language
+          in: query
+          schema: { type: string, default: en-US }
+      responses:
+        "200":
+          description: Full TMDBMovie object with imdb_id, runtime, genres, etc.
+
+  # TMDB — Popular Movies
+  /movie/popular:
+    get:
+      servers:
+        - url: https://api.themoviedb.org/3
+      summary: Get list of currently popular movies (used on home page)
+      security:
+        - TMDBBearer: []
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: language
+          in: query
+          schema: { type: string, default: en-US }
+      responses:
+        "200":
+          description: TMDBSearchResult with popular movies
