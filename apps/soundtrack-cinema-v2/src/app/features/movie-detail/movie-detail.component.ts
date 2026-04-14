@@ -24,7 +24,7 @@ import { TMDBMovie } from '../../../../spec/contracts/types';
 })
 export class MovieDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  readonly router = inject(Router);
+  private router = inject(Router);
   private tmdbService = inject(TmdbService);
 
   readonly movie = signal<TMDBMovie | null>(null);
@@ -32,11 +32,11 @@ export class MovieDetailComponent implements OnInit {
   readonly error = signal<string | null>(null);
 
   /** Track ID from query param (set when navigating from track detail) */
-  fromTrackId: string | null = null;
+  readonly fromTrackId = signal<string | null>(null);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.fromTrackId = this.route.snapshot.queryParamMap.get('from');
+    this.fromTrackId.set(this.route.snapshot.queryParamMap.get('from'));
     if (!id || isNaN(+id)) {
       this.router.navigate(['/']);
       return;
@@ -71,9 +71,14 @@ export class MovieDetailComponent implements OnInit {
     return h > 0 ? `${h}h ${m}m` : `${m}m`;
   }
 
+  goHome(): void {
+    this.router.navigate(['/']);
+  }
+
   goBack(): void {
-    if (this.fromTrackId) {
-      this.router.navigate(['/track', this.fromTrackId]);
+    const fromId = this.fromTrackId();
+    if (fromId) {
+      this.router.navigate(['/track', fromId]);
     } else {
       this.router.navigate(['/']);
     }

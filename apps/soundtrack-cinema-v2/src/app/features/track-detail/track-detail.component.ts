@@ -1,9 +1,9 @@
-import { Component, OnInit, Signal, computed, effect, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
-import type { MovieRecommendation, SpotifyTrack } from '../../../../spec/contracts/types';
+import type { SpotifyTrack } from '../../../../spec/contracts/types';
 import { SpotifyService } from '../../services/spotify/spotify.service';
 import { RecommendationsStateService } from '../../core/state/recommendations.state';
 import {
@@ -30,7 +30,7 @@ export class TrackDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private spotifyService = inject(SpotifyService);
-  readonly recsState = inject(RecommendationsStateService);
+  private recsState = inject(RecommendationsStateService);
   private liveAnnouncer = inject(LiveAnnouncer);
 
   readonly track = signal<SpotifyTrack | null>(null);
@@ -45,7 +45,7 @@ export class TrackDetailComponent implements OnInit {
 
   readonly sortOrder = signal<'score' | 'rating' | 'year'>('score');
 
-  readonly sortedRecommendations: Signal<MovieRecommendation[]> = computed(() => {
+  readonly sortedRecommendations = computed(() => {
     const recs = this.recommendations();
     const sort = this.sortOrder();
     return [...recs].sort((a, b) => {
@@ -59,7 +59,7 @@ export class TrackDetailComponent implements OnInit {
     });
   });
 
-  readonly hasLlmResults: Signal<boolean> = computed(() =>
+  readonly hasLlmResults = computed(() =>
     this.recommendations().some(r => r.source === 'llm-suggestion' || r.source === 'both')
   );
 
@@ -80,6 +80,11 @@ export class TrackDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) { this.router.navigate(['/']); return; }
     this.loadTrack(id);
+  }
+
+  retryRecommendations(): void {
+    const track = this.track();
+    if (track) this.recsState.loadForTrack(track);
   }
 
   onMinRatingChange(rating: number): void {

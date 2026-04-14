@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, input, linkedSignal, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,9 +10,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './search-bar.component.css',
 })
 export class SearchBarComponent {
-  @Input() placeholder = 'Search songs or artists...';
-  @Input() value = '';
-  @Input() disabled = false;
+  placeholder = input('Search songs or artists...');
+  value = input('');
+  disabled = input(false);
+
+  protected _value = linkedSignal(() => this.value());
 
   @Output() queryChange = new EventEmitter<string>();
   @Output() cleared = new EventEmitter<void>();
@@ -21,17 +23,17 @@ export class SearchBarComponent {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   get hasValue(): boolean {
-    return this.value.length > 0;
+    return this._value().length > 0;
   }
 
   onInput(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.value = target.value;
-    this.queryChange.emit(this.value);
+    this._value.set(target.value);
+    this.queryChange.emit(this._value());
   }
 
   onClear(): void {
-    this.value = '';
+    this._value.set('');
     this.queryChange.emit('');
     this.cleared.emit();
     this.searchInput?.nativeElement.focus();

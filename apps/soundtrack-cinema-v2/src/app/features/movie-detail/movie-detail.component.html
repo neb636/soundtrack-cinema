@@ -2,7 +2,7 @@
   <!-- Navigation -->
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <button class="btn-back" (click)="goBack()">
-      ← Back to {{ fromTrackId ? 'recommendations' : 'home' }}
+      ← Back to {{ fromTrackId() ? 'recommendations' : 'home' }}
     </button>
   </nav>
 
@@ -19,7 +19,7 @@
       icon="🎬"
       [title]="error()!"
       actionLabel="Go Home"
-      (action)="router.navigate(['/'])" />
+      (action)="goHome()" />
   }
 
   <!-- Movie content -->
@@ -111,11 +111,11 @@
   }
 
   <!-- "You came from" section — shown when navigated from a track detail page -->
-  @if (fromTrackId) {
+  @if (fromTrackId()) {
     <section class="came-from" aria-label="Navigation context">
       <p class="came-from-label">You came from</p>
       <a
-        [routerLink]="['/track', fromTrackId]"
+        [routerLink]="['/track', fromTrackId()]"
         class="came-from-link"
         aria-label="Back to recommendations for this track">
         ← Back to recommendations

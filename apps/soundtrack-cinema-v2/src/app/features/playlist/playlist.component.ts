@@ -1,8 +1,7 @@
-import { Component, OnInit, Signal, computed, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
-import { SpotifyPlaylist } from '../../../../spec/contracts/types';
 import { AuthStateService } from '../../core/state/auth.state';
 import { PlaylistStateService } from '../../core/state/playlist.state';
 import { SpotifyAuthService } from '../../core/auth/spotify-auth.service';
@@ -45,15 +44,8 @@ export class PlaylistComponent implements OnInit {
   readonly recommendations = this.playlistState.recommendations.asReadonly();
   readonly error = this.playlistState.error.asReadonly();
 
-  readonly selectedPlaylist: Signal<SpotifyPlaylist | null> = computed(() => {
-    const id = this.selectedId();
-    if (!id) return null;
-    return this.playlists().find(p => p.id === id) ?? null;
-  });
-
-  readonly canGenerateRecommendations: Signal<boolean> = computed(() =>
-    this.tracksStatus() === 'success' && this.tracks().length > 0
-  );
+  readonly selectedPlaylist = this.playlistState.selectedPlaylist; // computed() — already readonly
+  readonly canGenerateRecommendations = this.playlistState.canGenerateRecommendations; // computed() — already readonly
 
   ngOnInit(): void {
     if (this.isAuthenticated()) {

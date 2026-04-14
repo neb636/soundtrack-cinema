@@ -94,7 +94,7 @@
           [title]="recsError() ?? 'Something went wrong'"
           message="We couldn't load recommendations right now."
           actionLabel="Try Again"
-          (action)="recsState.loadForTrack(track()!)" />
+          (action)="retryRecommendations()" />
       }
 
       <!-- Empty results -->

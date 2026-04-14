@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,14 +9,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './loading-spinner.component.css',
 })
 export class LoadingSpinnerComponent {
-  @Input() size: 'sm' | 'md' | 'lg' = 'md';
-  @Input() message = '';
+  size = input<'sm' | 'md' | 'lg'>('md');
+  message = input('');
 
   get ariaLabel(): string {
-    return this.message || 'Loading';
+    return this.message() || 'Loading';
   }
 
   get sizeClass(): string {
-    return `spinner--${this.size}`;
+    return `spinner--${this.size()}`;
   }
 }

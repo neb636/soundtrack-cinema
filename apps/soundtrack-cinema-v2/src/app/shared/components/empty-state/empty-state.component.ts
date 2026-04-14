@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,10 +9,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './empty-state.component.css',
 })
 export class EmptyStateComponent {
-  @Input() icon = '🎬';
-  @Input({ required: true }) title!: string;
-  @Input() message = '';
-  @Input() actionLabel = '';
+  icon = input('🎬');
+  title = input.required<string>();
+  message = input('');
+  actionLabel = input('');
 
   @Output() action = new EventEmitter<void>();
 

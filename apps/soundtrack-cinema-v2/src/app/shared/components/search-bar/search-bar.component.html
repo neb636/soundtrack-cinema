@@ -5,16 +5,16 @@
     #searchInput
     class="search-bar__input"
     type="text"
-    [placeholder]="placeholder"
-    [value]="value"
-    [disabled]="disabled"
-    [attr.aria-disabled]="disabled ? 'true' : null"
+    [placeholder]="placeholder()"
+    [value]="_value()"
+    [disabled]="disabled()"
+    [attr.aria-disabled]="disabled() ? 'true' : null"
     aria-label="Search songs or artists"
     (input)="onInput($event)"
     (keydown)="onKeydown($event)"
   />
 
-  @if (hasValue && !disabled) {
+  @if (hasValue && !disabled()) {
     <button
       class="search-bar__clear"
       type="button"
@@ -25,7 +25,7 @@
     </button>
   }
 
-  @if (disabled) {
+  @if (disabled()) {
     <button
       class="search-bar__disabled-overlay"
       type="button"

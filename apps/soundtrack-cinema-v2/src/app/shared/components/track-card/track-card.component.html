@@ -4,22 +4,22 @@
   tabindex="0"
   (click)="onSelect()"
   (keydown)="onKeydown($event)"
-  [attr.aria-label]="track.name + ' by ' + artistNames"
+  [attr.aria-label]="track().name + ' by ' + artistNames"
 >
   <img
     class="track-card__album-art"
     [src]="albumArtUrl"
-    [alt]="track.album.name + ' album art'"
+    [alt]="track().album.name + ' album art'"
     width="48"
     height="48"
     loading="lazy"
   />
   <div class="track-card__info">
-    <span class="track-card__name">{{ track.name }}</span>
+    <span class="track-card__name">{{ track().name }}</span>
     <span class="track-card__meta">
       <span class="track-card__artists">{{ artistNames }}</span>
       <span class="track-card__separator" aria-hidden="true"> · </span>
-      <span class="track-card__duration">{{ track.duration_ms | duration }}</span>
+      <span class="track-card__duration">{{ track().duration_ms | duration }}</span>
     </span>
   </div>
 </div>

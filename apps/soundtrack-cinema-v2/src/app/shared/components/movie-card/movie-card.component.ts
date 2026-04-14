@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieRecommendation } from '../../../../../spec/contracts/types';
 import { TmdbImagePipe } from '../../../services/tmdb/tmdb-image.pipe';
@@ -12,13 +12,13 @@ import { RatingBadgeComponent } from '../rating-badge/rating-badge.component';
   styleUrl: './movie-card.component.css',
 })
 export class MovieCardComponent {
-  @Input({ required: true }) recommendation!: MovieRecommendation;
-  @Input() showSource = true;
+  recommendation = input.required<MovieRecommendation>();
+  showSource = input(true);
 
   @Output() viewDetails = new EventEmitter<number>();
 
   get movie() {
-    return this.recommendation.movie;
+    return this.recommendation().movie;
   }
 
   get releaseYear(): string {
@@ -28,9 +28,9 @@ export class MovieCardComponent {
 
   get isAiEnhanced(): boolean {
     return (
-      this.showSource &&
-      (this.recommendation.source === 'llm-suggestion' ||
-        this.recommendation.source === 'both')
+      this.showSource() &&
+      (this.recommendation().source === 'llm-suggestion' ||
+        this.recommendation().source === 'both')
     );
   }
 
