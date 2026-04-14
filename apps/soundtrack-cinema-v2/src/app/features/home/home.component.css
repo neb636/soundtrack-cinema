@@ -1,0 +1,148 @@
+/* ─── Page container ─────────────────────────────────────────────────── */
+.home {
+  min-height: 100%;
+  padding-bottom: 64px;
+}
+
+/* ─── Hero ───────────────────────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 64px 24px 48px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+}
+
+/* ─── Auth prompt ────────────────────────────────────────────────────── */
+.auth-prompt {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.auth-prompt p {
+  color: var(--color-text-secondary);
+  font-size: 0.9375rem;
+}
+
+.btn-spotify {
+  background: var(--color-spotify);
+  color: #fff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.btn-spotify:hover {
+  opacity: 0.85;
+}
+
+.btn-spotify:focus-visible {
+  outline: 2px solid var(--color-spotify);
+  outline-offset: 3px;
+}
+
+/* ─── Search Results ─────────────────────────────────────────────────── */
+.search-results {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 24px;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.search-error {
+  max-width: 480px;
+  margin: 24px auto;
+  padding: 0 24px;
+}
+
+/* ─── Section headings ───────────────────────────────────────────────── */
+.top-tracks h2,
+.popular-movies h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+
+/* ─── Top Tracks ─────────────────────────────────────────────────────── */
+.top-tracks {
+  margin-top: 48px;
+}
+
+.tracks-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.tracks-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tracks-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+/* ─── Popular Movies ─────────────────────────────────────────────────── */
+.popular-movies {
+  margin-top: 48px;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 16px 32px;
+  }
+
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .tracks-scroll {
+    padding: 8px 16px;
+  }
+
+  .top-tracks h2,
+  .popular-movies h2 {
+    padding: 0 16px;
+  }
+}

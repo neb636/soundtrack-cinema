@@ -1,0 +1,121 @@
+<div class="playlist-page">
+  <!-- Header -->
+  <header class="page-header">
+    <a routerLink="/" class="btn-back" aria-label="Go back to home">← Home</a>
+    <h1>Playlist Movie Finder</h1>
+    <p class="subtitle">Select a playlist to discover movies that match its vibe</p>
+  </header>
+
+  <!-- Unauthenticated -->
+  @if (!isAuthenticated()) {
+    <app-empty-state
+      icon="🎵"
+      title="Connect Spotify to use playlists"
+      message="Sign in with Spotify to access your playlists and get personalized recommendations."
+      actionLabel="Connect Spotify"
+      (action)="connectSpotify()" />
+  } @else {
+
+    <!-- Playlist grid -->
+    <section class="playlists-section" aria-labelledby="playlists-title">
+      <h2 id="playlists-title" class="section-title">Your Playlists</h2>
+
+      @if (playlistsStatus() === 'loading') {
+        <app-loading-spinner message="Loading your playlists..." />
+      } @else if (playlistsStatus() === 'error') {
+        <app-empty-state icon="⚠️" title="Could not load playlists" [message]="error() ?? ''" />
+      } @else {
+        <div class="playlists-grid" role="list" aria-label="Your Spotify playlists">
+          @for (playlist of playlists(); track playlist.id) {
+            <button
+              class="playlist-card"
+              role="listitem"
+              [class.selected]="selectedId() === playlist.id"
+              [attr.aria-pressed]="selectedId() === playlist.id"
+              [attr.aria-label]="playlist.name + ', ' + playlist.tracks.total + ' songs'"
+              (click)="selectPlaylist(playlist.id)">
+              <img
+                class="playlist-cover"
+                [src]="playlist.images[0]?.url || '/assets/no-poster.svg'"
+                [alt]="playlist.name + ' cover'"
+                width="120"
+                height="120" />
+              <div class="playlist-info">
+                <span class="playlist-name">{{ playlist.name }}</span>
+                <span class="playlist-count">{{ playlist.tracks.total }} songs</span>
+              </div>
+            </button>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Selected playlist + tracks -->
+    @if (selectedPlaylist(); as playlist) {
+      <section class="selected-section" aria-labelledby="selected-title">
+        <div class="selected-header">
+          <h2 id="selected-title">{{ playlist.name }}</h2>
+          @if (playlist.description) {
+            <p class="playlist-desc">{{ playlist.description }}</p>
+          }
+        </div>
+
+        <!-- Track preview -->
+        @if (tracksStatus() === 'loading') {
+          <app-loading-spinner message="Loading tracks..." size="sm" />
+        } @else if (tracksStatus() === 'success') {
+          <div class="tracks-preview" aria-label="Playlist tracks preview">
+            @for (track of tracks().slice(0, 5); track track.id) {
+              <app-track-card [track]="track" />
+            }
+            @if (tracks().length > 5) {
+              <p class="tracks-more">+ {{ tracks().length - 5 }} more tracks</p>
+            }
+          </div>
+
+          <!-- Generate button -->
+          <div class="generate-section">
+            <button
+              class="btn-generate"
+              [disabled]="!canGenerateRecommendations() || recsStatus() === 'loading'"
+              (click)="generateRecommendations()"
+              [attr.aria-label]="'Find movies for ' + playlist.name + ' playlist'">
+              @if (recsStatus() === 'loading') {
+                Finding movies...
+              } @else {
+                Find Movies for This Playlist
+              }
+            </button>
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Recommendations results -->
+    @if (recommendations(); as recs) {
+      <section class="recs-section" aria-labelledby="recs-title" aria-live="polite">
+        <h2 id="recs-title">
+          Movie Recommendations
+          <span class="recs-count">({{ recs.recommendations.length }})</span>
+        </h2>
+
+        @if (recsStatus() === 'loading') {
+          <app-loading-spinner message="Analyzing your playlist..." size="lg" />
+        } @else {
+          <div class="movies-grid">
+            @for (rec of recs.recommendations; track rec.movie.id) {
+              <div class="movie-with-context">
+                <app-movie-card
+                  [recommendation]="rec"
+                  (viewDetails)="onViewMovie($event)" />
+                <p class="match-count" [attr.aria-label]="rec.matchCount + ' tracks matched'">
+                  ♫ matched by {{ rec.matchCount }} track{{ rec.matchCount === 1 ? '' : 's' }}
+                </p>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+  }
+</div>

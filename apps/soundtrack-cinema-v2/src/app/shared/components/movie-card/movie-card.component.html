@@ -1,0 +1,39 @@
+<article
+  class="movie-card"
+  tabindex="0"
+  (keydown)="onKeydown($event)"
+  [attr.aria-label]="movie.title + ' movie card'"
+>
+  <div class="movie-card__poster-wrapper">
+    <img
+      class="movie-card__poster"
+      [src]="movie.poster_path | tmdbImage: 'w342'"
+      [alt]="movie.title + ' movie poster'"
+      loading="lazy"
+    />
+  </div>
+
+  <div class="movie-card__body">
+    <div class="movie-card__meta">
+      <app-rating-badge [rating]="movie.vote_average" />
+      @if (isAiEnhanced) {
+        <span class="movie-card__ai-badge" aria-label="AI enhanced recommendation">AI</span>
+      }
+    </div>
+
+    <h3 class="movie-card__title">{{ movie.title }}</h3>
+
+    @if (releaseYear) {
+      <p class="movie-card__year">{{ releaseYear }}</p>
+    }
+
+    <button
+      class="movie-card__btn"
+      type="button"
+      (click)="onViewDetails()"
+      [attr.aria-label]="'View details for ' + movie.title"
+    >
+      View Movie →
+    </button>
+  </div>
+</article>

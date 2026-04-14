@@ -1,0 +1,11 @@
+<div class="callback-container">
+  <div class="callback-card" role="status" aria-live="polite" aria-atomic="true">
+    @if (!hasError()) {
+      <div class="spinner" aria-hidden="true">
+        <div class="spinner-ring"></div>
+      </div>
+    }
+
+    <p class="callback-message">{{ statusMessage() }}</p>
+  </div>
+</div>

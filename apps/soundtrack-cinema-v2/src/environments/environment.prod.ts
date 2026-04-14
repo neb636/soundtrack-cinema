@@ -1,7 +1,7 @@
 import { Environment } from '../../spec/contracts/types';
 
 export const environment: Environment = {
-  production: false,
+  production: true,
   spotify: {
     clientId: 'YOUR_SPOTIFY_CLIENT_ID',
     redirectUri: 'http://localhost:4200/callback',

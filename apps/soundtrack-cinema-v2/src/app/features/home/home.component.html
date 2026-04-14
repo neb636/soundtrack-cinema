@@ -1,0 +1,98 @@
+<main class="home">
+
+  <!-- ═══════════════════════════════════════════════════════ Hero Section -->
+  <section class="hero" aria-labelledby="hero-title">
+    <h1 id="hero-title">Discover movies through music</h1>
+    <p class="hero-subtitle">Search any song and find movies that match its vibe</p>
+
+    <app-search-bar
+      [value]="searchQuery()"
+      [disabled]="!isAuthenticated()"
+      placeholder="Search songs or artists..."
+      (queryChange)="onSearch($event)"
+      (cleared)="onSearchCleared()"
+      (disabledClick)="connectSpotify()" />
+
+    @if (!isAuthenticated()) {
+      <div class="auth-prompt">
+        <p>Connect your Spotify account to search for songs</p>
+        <button class="btn-spotify" (click)="connectSpotify()">
+          Connect Spotify
+        </button>
+      </div>
+    }
+  </section>
+
+  <!-- ════════════════════════════════════════════════ Search Results Section -->
+  @if (hasSearchResults() || searchStatus() === 'loading') {
+    <section class="search-results" aria-label="Search results" aria-live="polite">
+      @if (searchStatus() === 'loading') {
+        <app-loading-spinner message="Searching Spotify..." />
+      } @else {
+        <div class="results-list">
+          @for (track of searchResults(); track track.id) {
+            <app-track-card [track]="track" (selected)="onTrackSelected($event)" />
+          }
+        </div>
+      }
+    </section>
+  }
+
+  @if (searchStatus() === 'error') {
+    <section class="search-error" aria-live="assertive">
+      <app-empty-state
+        icon="⚠️"
+        title="Search failed"
+        message="Could not complete your search. Please try again."
+      />
+    </section>
+  }
+
+  <!-- ═══════════════════════════════════════════════════ Discovery Section -->
+  @if (searchStatus() === 'idle') {
+    @if (isAuthenticated()) {
+      <!-- Top Tracks -->
+      <section class="top-tracks" aria-labelledby="top-tracks-title">
+        <h2 id="top-tracks-title">Your Top Tracks</h2>
+        @if (topTracksLoading()) {
+          <app-loading-spinner size="sm" />
+        } @else if (topTracks().length === 0) {
+          <app-empty-state
+            title="No top tracks yet"
+            message="Listen to more music on Spotify and your top tracks will appear here."
+          />
+        } @else {
+          <div class="tracks-scroll">
+            @for (track of topTracks(); track track.id) {
+              <app-track-card [track]="track" (selected)="onTrackSelected($event)" />
+            }
+          </div>
+        }
+      </section>
+    } @else {
+      <!-- Popular Movies -->
+      <section class="popular-movies" aria-labelledby="popular-title">
+        <h2 id="popular-title">Popular Movies Right Now</h2>
+        @if (popularMoviesLoading()) {
+          <app-loading-spinner size="sm" />
+        } @else if (popularMovies().length === 0) {
+          <app-empty-state
+            icon="🎬"
+            title="No movies available"
+            message="Could not load popular movies. Please try again later."
+          />
+        } @else {
+          <div class="movies-grid">
+            @for (movie of popularMovies(); track movie.id) {
+              <app-movie-card
+                [recommendation]="{ movie: movie, score: movie.vote_average * 10, source: 'tmdb-search' }"
+                [showSource]="false"
+                (viewDetails)="onMovieSelected($event)" />
+            }
+          </div>
+        }
+      </section>
+    }
+  }
+
+</main>

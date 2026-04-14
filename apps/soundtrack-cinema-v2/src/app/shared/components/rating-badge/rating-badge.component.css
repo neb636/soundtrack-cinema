@@ -1,0 +1,28 @@
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.rating-badge__star {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.rating-badge__value {
+  line-height: 1;
+}
+
+.rating--success {
+  color: var(--color-success);
+}
+
+.rating--accent {
+  color: var(--color-accent);
+}
+
+.rating--secondary {
+  color: var(--color-text-secondary);
+}

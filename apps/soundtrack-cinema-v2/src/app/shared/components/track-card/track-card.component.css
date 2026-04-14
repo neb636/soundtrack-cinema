@@ -1,0 +1,62 @@
+.track-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  outline: none;
+  user-select: none;
+}
+
+.track-card:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.track-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  background-color: var(--color-bg-secondary);
+}
+
+.track-card__album-art {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: var(--color-bg-secondary);
+}
+
+.track-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.track-card__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-card__meta {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-card__artists {
+  color: var(--color-text-secondary);
+}
+
+.track-card__duration {
+  color: var(--color-text-secondary);
+}

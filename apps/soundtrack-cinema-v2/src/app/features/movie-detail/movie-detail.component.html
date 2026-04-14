@@ -1,0 +1,125 @@
+<div class="movie-detail-page">
+  <!-- Navigation -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <button class="btn-back" (click)="goBack()">
+      ← Back to {{ fromTrackId ? 'recommendations' : 'home' }}
+    </button>
+  </nav>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-wrapper" aria-live="polite" aria-busy="true">
+      <app-loading-spinner size="lg" message="Loading movie details..." />
+    </div>
+  }
+
+  <!-- Error -->
+  @else if (error()) {
+    <app-empty-state
+      icon="🎬"
+      [title]="error()!"
+      actionLabel="Go Home"
+      (action)="router.navigate(['/'])" />
+  }
+
+  <!-- Movie content -->
+  @else if (movie(); as m) {
+    <article class="movie-content" aria-label="Movie details">
+
+      <!-- Backdrop image (decorative) -->
+      @if (m.backdrop_path) {
+        <div
+          class="backdrop"
+          [style.background-image]="'url(' + (m.backdrop_path | tmdbImage:'w780') + ')'"
+          aria-hidden="true">
+        </div>
+      }
+
+      <!-- Poster + Info layout -->
+      <div class="movie-layout">
+        <!-- Poster column -->
+        <aside class="poster-column">
+          <img
+            class="movie-poster"
+            [src]="m.poster_path | tmdbImage:'w500'"
+            [alt]="m.title + ' movie poster'"
+            width="300"
+            height="450" />
+        </aside>
+
+        <!-- Info column -->
+        <div class="info-column">
+          <header>
+            <h1 class="movie-title">
+              {{ m.title }}
+              <span class="movie-year" aria-label="Release year">
+                ({{ getReleaseYear(m.release_date) }})
+              </span>
+            </h1>
+
+            @if (m.tagline) {
+              <p class="tagline">{{ m.tagline }}</p>
+            }
+          </header>
+
+          <!-- Metadata row -->
+          <div class="meta-row" aria-label="Movie metadata">
+            <app-rating-badge [rating]="m.vote_average" />
+            <span class="meta-votes" [attr.aria-label]="m.vote_count + ' votes'">
+              {{ m.vote_count | number }} votes
+            </span>
+            @if (m.runtime) {
+              <span class="meta-runtime" aria-label="Runtime">
+                {{ formatRuntime(m.runtime) }}
+              </span>
+            }
+          </div>
+
+          <!-- Genres -->
+          @if (m.genres && m.genres.length > 0) {
+            <div class="genres" role="list" aria-label="Genres">
+              @for (genre of m.genres; track genre.id) {
+                <span class="genre-badge" role="listitem">{{ genre.name }}</span>
+              }
+            </div>
+          }
+
+          <!-- Overview -->
+          @if (m.overview) {
+            <section aria-label="Movie overview">
+              <h2 class="section-title">Overview</h2>
+              <p class="overview">{{ m.overview }}</p>
+            </section>
+          }
+
+          <!-- Action buttons -->
+          <div class="actions">
+            @if (m.imdb_id) {
+              <a
+                [href]="getImdbUrl(m.imdb_id)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-imdb"
+                [attr.aria-label]="'View ' + m.title + ' on IMDB (opens in new tab)'">
+                View on IMDB ↗
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </article>
+  }
+
+  <!-- "You came from" section — shown when navigated from a track detail page -->
+  @if (fromTrackId) {
+    <section class="came-from" aria-label="Navigation context">
+      <p class="came-from-label">You came from</p>
+      <a
+        [routerLink]="['/track', fromTrackId]"
+        class="came-from-link"
+        aria-label="Back to recommendations for this track">
+        ← Back to recommendations
+      </a>
+    </section>
+  }
+</div>

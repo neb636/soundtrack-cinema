@@ -1,0 +1,38 @@
+<div class="search-bar" role="search" aria-label="Search songs">
+  <span class="search-bar__icon" aria-hidden="true">🔍</span>
+
+  <input
+    #searchInput
+    class="search-bar__input"
+    type="text"
+    [placeholder]="placeholder"
+    [value]="value"
+    [disabled]="disabled"
+    [attr.aria-disabled]="disabled ? 'true' : null"
+    aria-label="Search songs or artists"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
+  />
+
+  @if (hasValue && !disabled) {
+    <button
+      class="search-bar__clear"
+      type="button"
+      aria-label="Clear search"
+      (click)="onClear()"
+    >
+      ✕
+    </button>
+  }
+
+  @if (disabled) {
+    <button
+      class="search-bar__disabled-overlay"
+      type="button"
+      aria-label="Connect Spotify to search"
+      tabindex="0"
+      (click)="onDisabledClick()"
+      (keydown)="onDisabledKeydown($event)"
+    ></button>
+  }
+</div>

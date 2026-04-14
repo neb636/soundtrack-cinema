@@ -1,0 +1,127 @@
+<div class="track-detail-page">
+  <!-- Back navigation -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <button class="btn-back" (click)="goBack()" aria-label="Go back to search">
+      ← Back
+    </button>
+  </nav>
+
+  <!-- Track hero -->
+  @if (trackLoading()) {
+    <div class="track-hero skeleton" aria-busy="true" aria-label="Loading track information">
+      <div class="skeleton-art"></div>
+      <div class="skeleton-info">
+        <div class="skeleton-line skeleton-line--title"></div>
+        <div class="skeleton-line skeleton-line--subtitle"></div>
+        <div class="skeleton-line skeleton-line--meta"></div>
+      </div>
+    </div>
+  } @else if (track(); as t) {
+    <section class="track-hero" aria-label="Track information">
+      <img
+        class="album-art"
+        [src]="t.album.images[0]?.url"
+        [alt]="t.album.name + ' album art'"
+        width="200" height="200" />
+      <div class="track-info">
+        <h1 class="track-name">{{ t.name }}</h1>
+        <p class="track-artist">{{ t.artists[0]?.name }}</p>
+        <p class="track-meta">
+          {{ t.album.name }} · {{ t.album.release_date | slice:0:4 }}
+        </p>
+        <p class="track-duration">{{ t.duration_ms | duration }}</p>
+      </div>
+    </section>
+  } @else if (trackError()) {
+    <app-empty-state
+      icon="⚠️"
+      [title]="trackError()!"
+      actionLabel="Go Back"
+      (action)="goBack()" />
+  }
+
+  <!-- Recommendations section -->
+  @if (track()) {
+    <section class="recommendations" aria-labelledby="recs-title">
+      <div class="recs-header">
+        <h2 id="recs-title">
+          Movies that match this vibe
+          @if (hasLlmResults()) {
+            <span class="ai-badge" aria-label="AI enhanced results">AI enhanced</span>
+          }
+        </h2>
+
+        <!-- Filters -->
+        <div class="filters" role="group" aria-label="Filter and sort options">
+          <label class="filter-label">
+            Min Rating:
+            <select
+              [value]="minRating()"
+              (change)="onMinRatingChange(+$any($event.target).value)"
+              aria-label="Minimum movie rating">
+              <option value="5">5.0+</option>
+              <option value="6">6.0+</option>
+              <option value="7">7.0+</option>
+              <option value="8">8.0+</option>
+            </select>
+          </label>
+
+          <label class="filter-label">
+            Sort by:
+            <select
+              [value]="sortOrder()"
+              (change)="onSortChange($any($event.target).value)"
+              aria-label="Sort recommendations">
+              <option value="score">Relevance</option>
+              <option value="rating">Rating</option>
+              <option value="year">Year (newest)</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      @if (recsStatus() === 'loading') {
+        <div class="recs-loading" aria-live="polite" aria-busy="true">
+          <app-loading-spinner message="Finding movies..." size="lg" />
+        </div>
+      }
+
+      <!-- Error state -->
+      @else if (recsStatus() === 'error') {
+        <app-empty-state
+          icon="⚠️"
+          [title]="recsError() ?? 'Something went wrong'"
+          message="We couldn't load recommendations right now."
+          actionLabel="Try Again"
+          (action)="recsState.loadForTrack(track()!)" />
+      }
+
+      <!-- Empty results -->
+      @else if (recsStatus() === 'success' && sortedRecommendations().length === 0) {
+        <app-empty-state
+          icon="🎬"
+          title="No movies found"
+          message="Try lowering the minimum rating filter or searching for a different song." />
+      }
+
+      <!-- Results grid -->
+      @else if (sortedRecommendations().length > 0) {
+        <div class="movies-grid" aria-live="polite">
+          @for (rec of sortedRecommendations(); track rec.movie.id) {
+            <app-movie-card
+              [recommendation]="rec"
+              [showSource]="hasLlmResults()"
+              (viewDetails)="onViewMovie($event)" />
+          }
+        </div>
+
+        @if (hasLlmResults()) {
+          <p class="ai-note" aria-label="AI enhancement notice">
+            🤖 Results enhanced with emotional sentiment analysis
+          </p>
+        }
+      }
+    </section>
+  }
+</div>

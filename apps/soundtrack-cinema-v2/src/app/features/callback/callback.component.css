@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.callback-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: var(--color-background, #0a0a0a);
+}
+
+.callback-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: var(--color-surface, #1a1a1a);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Spinner */
+.spinner {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-ring {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-accent, #1db954);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status text */
+.callback-message {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-text-primary, #ffffff);
+  text-align: center;
+  max-width: 280px;
+  line-height: 1.5;
+}

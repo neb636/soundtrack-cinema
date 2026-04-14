@@ -1,0 +1,6 @@
+<div class="spinner-container" role="status" [attr.aria-label]="ariaLabel">
+  <div class="spinner" [class]="sizeClass" aria-hidden="true"></div>
+  @if (message) {
+    <p class="spinner-message">{{ message }}</p>
+  }
+</div>
